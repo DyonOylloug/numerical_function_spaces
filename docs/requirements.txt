@@ -1,0 +1,9 @@
+myst-nb
+sphinx-autoapi
+sphinx-rtd-theme
+matplotlib>=3.7.2
+numpy>=1.25.2
+tqdm>=4.65.0
+PyQt5>=5.15.10
+jupyter
+pytest~=8.3.2
