@@ -7,9 +7,10 @@ def kappa(Orlicz_function, x, k, p_norm):
     # x_abs = np.zeros(shape=np.shape(x))  # x[0, :] = abs(x[0, :]) powoduje zmianę zewnętrznej zmiennej!!! ???
     # x_abs[0, :] = abs(x[0, :])
     # x_abs[1, :] = x[1, :]
-    # x[0, :] = abs(x[0, :])  # powoduje zmianę zewnętrznej zmiennej!!! ???
-    x = abs(x)  # zmienia zarówno wartości, jak i nośniki, ale
-    # nośniki muszą być dodatnie w definicji funkcji
+    if any(x[1, :] <= 0):
+        raise ValueError("wrong definition of x(t): x[1, :] must be positive")
+    x = abs(x)
+
     '''
     np.nansum dopuszcza wagi nieskończone przyjmujemy wtedy, że 0*inf = 0. Numpy przyjmuje, że to jest Nan
     '''
@@ -223,6 +224,8 @@ def p_Amemiya_norm_with_stars(
     Examples
 
     """
+    if any(x[1, :] <= 0):
+        raise ValueError("wrong definition of x(t): x[1, :] must be positive")
     x = abs(x)
     if np.max(x) == 0:
         return 0, np.nan, np.nan
@@ -410,6 +413,8 @@ def p_Amemiya_norm_with_stars_by_decimal(
         len_domain_k: dc.Decimal = 1000,
         show_progress: bool = False
 ) -> tuple:
+    if any(x[1, :] <= 0):
+        raise ValueError("wrong definition of x(t): x[1, :] must be positive")
     x = abs(x)
     dk = (k_max - k_min) / len_domain_k
     kappa_domain = []
