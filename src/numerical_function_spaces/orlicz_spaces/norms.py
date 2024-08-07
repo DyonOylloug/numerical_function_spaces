@@ -4,16 +4,33 @@ import decimal as dc
 
 
 def kappa(Orlicz_function, x, k, p_norm):
+    """
+    Calculates the kappa value for a given set of parameters.
+
+    Parameters
+    Orlicz_function : function
+        The Orlicz function to be used.
+    x : np.ndarray
+        A 2D numpy array representing x(t).
+    k (float): float
+        argument of kappa(k).
+    p_norm : float
+        The p-norm to be calculated.
+
+    Returns:
+    float: The kappa value.
+
+    Raises:
+    ValueError: If x[1, :] contains non-positive values.
+
+    """
     # x_abs = np.zeros(shape=np.shape(x))  # x[0, :] = abs(x[0, :]) powoduje zmianę zewnętrznej zmiennej!!! ???
     # x_abs[0, :] = abs(x[0, :])
     # x_abs[1, :] = x[1, :]
     if any(x[1, :] <= 0):
         raise ValueError("wrong definition of x(t): x[1, :] must be positive")
     x = abs(x)
-
-    '''
-    np.nansum dopuszcza wagi nieskończone przyjmujemy wtedy, że 0*inf = 0. Numpy przyjmuje, że to jest Nan
-    '''
+    # np.nansum dopuszcza wagi nieskończone przyjmujemy wtedy, że 0*inf = 0. Numpy przyjmuje, że to jest Nan
     if p_norm == 1:
         return 1 / k * (1 + np.nansum(Orlicz_function((k * x[0, :])) * x[1, :]))
     elif p_norm == np.inf:
@@ -81,7 +98,7 @@ def p_Amemiya_norm(
     return np.nanmin(val_k[0])
 
 
-def array_for_infimum(  # tego chyba nie używamy
+def array_for_infimum( # tego chyba nie używamy
         Orlicz_function,
         x: np.ndarray,
         # dt: float,
@@ -163,8 +180,10 @@ def Orlicz_norm_with_stars(
         len_domain_k: int = 1000,
         show_progress: bool = False
 ):
-    # return p_Amemiya_norm_with_stars(Orlicz_function, x, dt, 1, k_min, k_max, len_domain_k, show_progress=show_progress)
-    return p_Amemiya_norm_with_stars(Orlicz_function, x, 1, k_min, k_max, len_domain_k, show_progress=show_progress)
+    # return p_Amemiya_norm_with_stars(Orlicz_function, x, dt, 1, k_min, k_max, len_domain_k,
+    #                                  show_progress=show_progress)
+    return p_Amemiya_norm_with_stars(Orlicz_function, x, 1, k_min, k_max, len_domain_k,
+                                     show_progress=show_progress)
 
 
 def Luxemburg_norm_with_stars(
@@ -193,15 +212,14 @@ def p_Amemiya_norm_with_stars(
         show_progress: bool = False
 ):
     """
-    Computes the p-Amemiya norm of the function "x(t)" in Orlicz space for a given set of parameters.
+    Computes the p-Amemiya norm and k^{*} and k^{**} of the function "x(t)"
+    in Orlicz space for a given set of parameters
 
     Parameters
     Orlicz_function : function
         The Orlicz function to be used.
     x : np.ndarray
-        The input array.
-    dt : float
-        The t domain step.
+        A 2D numpy array representing x(t).
     p_norm : float
         The p-norm to be calculated.
     k_min : float, optional
@@ -213,17 +231,10 @@ def p_Amemiya_norm_with_stars(
     show_progress : bool, optional
         Whether to show a progress bar during computation, by default False.
 
-    Returns
-    float
-        The p-Amemiya norm of the function "x(t)" in Orlicz space.
-    float
-        The value of k^{*} - minimal k value where norm is attained.
-    float
-        The value of k^{**} - maximal k value where norm is attained.
-
-    Examples
-
+    Returns:
+    - A tuple containing the minimum value of the p-Amemiya norm, k^{*}, k^{**}, kappa_domain, and kappa_values.
     """
+
     if any(x[1, :] <= 0):
         raise ValueError("wrong definition of x(t): x[1, :] must be positive")
     x = abs(x)
@@ -399,7 +410,7 @@ def p_Amemiya_norm_with_stars(
         print('k_star is equal to k_min: try smaller k_min')
     if np.max(osiagane_minimum) == len_domain_k - 1:
         print('k_star_star is equal to k_max: try larger k_max')
-    return min(array_k), k_star, k_star_star  # , domain_k, array_k
+    return min(array_k), k_star, k_star_star, domain_k, array_k
 
 
 def p_Amemiya_norm_with_stars_by_decimal(
@@ -413,6 +424,32 @@ def p_Amemiya_norm_with_stars_by_decimal(
         len_domain_k: dc.Decimal = 1000,
         show_progress: bool = False
 ) -> tuple:
+    """
+    Computes the p-Amemiya norm and k^{*} and k^{**} of the function "x(t)"
+    in Orlicz space for a given set of parameters
+
+    Parameters
+    Orlicz_function : function
+        The Orlicz function to be used.
+    x : np.ndarray
+        A 2D numpy array representing x(t).
+    p_norm : float
+        The p-norm to be calculated in decimal form.
+    k_min : float, optional
+        The minimum value of the k domain in decimal form, by default 1/100000.
+    k_max : float, optional
+        The maximum value of the k domain in decimal form, by default 100.
+    len_domain_k : int, optional
+        The number of points in the k domain in decimal form, by default 1000.
+    show_progress : bool, optional
+        Whether to show a progress bar during computation, by default False.
+
+    Returns:
+    - A tuple containing the minimum value of the p-Amemiya norm, k^{*}, k^{**}, kappa_domain, and kappa_values.
+
+    Raises:
+    - ValueError: If any value in x[1, :] is less than or equal to 0.
+    """
     if any(x[1, :] <= 0):
         raise ValueError("wrong definition of x(t): x[1, :] must be positive")
     x = abs(x)
