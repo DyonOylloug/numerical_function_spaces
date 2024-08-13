@@ -13,7 +13,7 @@ def kappa(Orlicz_function, x, k, p_norm):
         The Orlicz function to be used.
     x : np.ndarray
         A 2D numpy array representing x(t).
-    k (float): float
+    K (float): float
         argument of kappa(k).
     p_norm : float
         The p-norm to be calculated.
@@ -105,78 +105,78 @@ def p_Amemiya_norm(
         # print(val_k)
     return np.nanmin(val_k[0])
 
-
-def array_for_infimum( # tego chyba nie używamy
-        Orlicz_function,
-        x: np.ndarray,
-        # dt: float,
-        k_min: float,
-        k_max: float,
-        dk: float,
-        p_norm: float,
-        show_progress: bool = False
-) -> tuple:
-    x = abs(x)
-    domain_k = np.arange(k_min, k_max, dk)
-    array_k = np.array([])
-    if p_norm == 1:
-        with tqdm(
-                total=len(domain_k),
-                # desc="counting of  infimum in [" + str(k_min) + "," + str(k_max) + "]",
-                # desc="counting of  $1/k*s_p(I_phi)(kx)$ in [" + str(k_min) + "," + str(k_max) + "]",
-                desc=f"counting of  $\\kappa_{{p={p_norm},x}}(k)$ in [" + str(k_min) + "," + str(k_max) + "]",
-                disable=not show_progress
-        ) as pbar:
-            for k in domain_k:
-                array_k = np.append(
-                    array_k,
-                    1 / k * (1 + np.nansum(Orlicz_function((k * x[0])) * x[1])),
-                )
-                pbar.update(1)
-    elif p_norm == np.inf:
-        with tqdm(
-                total=len(domain_k),
-                # desc="counting of  infimum in [" + str(k_min) + "," + str(k_max) + "]",
-                desc=f"counting of  $\\kappa_{{p={p_norm},x}}(k)$ in [" + str(k_min) + "," + str(k_max) + "]",
-                disable=not show_progress
-        ) as pbar:
-            for k in domain_k:
-                array_k = np.append(
-                    array_k,
-                    1
-                    / k
-                    * (
-                        max(
-                            1,
-                            np.nansum(Orlicz_function((k * x[0])) * x[1]),
-                        )
-                    ),
-                )
-                pbar.update(1)
-    else:
-        with tqdm(
-                total=len(domain_k),
-                # desc="counting of  infimum in [" + str(k_min) + "," + str(k_max) + "]",
-                desc=f"counting of  $\\kappa_{{p={p_norm},x}}(k)$ in [" + str(k_min) + "," + str(k_max) + "]",
-                disable=not show_progress
-        ) as pbar:
-            for k in domain_k:
-                array_k = np.append(
-                    array_k,
-                    1
-                    / k
-                    * (
-                            1
-                            + (
-                                    np.nansum(Orlicz_function((k * x[0])) * x[1])
-                                    ** p_norm
-                            )
-                    )
-                    ** (1 / p_norm),
-                )
-                pbar.update(1)
-    # print(array_k)
-    return domain_k, array_k
+# array_for_infimum was replaced by kappa
+# def array_for_infimum( # tego chyba nie używamy
+#         Orlicz_function,
+#         x: np.ndarray,
+#         # dt: float,
+#         k_min: float,
+#         k_max: float,
+#         dk: float,
+#         p_norm: float,
+#         show_progress: bool = False
+# ) -> tuple:
+#     x = abs(x)
+#     domain_k = np.arange(k_min, k_max, dk)
+#     array_k = np.array([])
+#     if p_norm == 1:
+#         with tqdm(
+#                 total=len(domain_k),
+#                 # desc="counting of  infimum in [" + str(k_min) + "," + str(k_max) + "]",
+#                 # desc="counting of  $1/k*s_p(I_phi)(kx)$ in [" + str(k_min) + "," + str(k_max) + "]",
+#                 desc=f"counting of  $\\kappa_{{p={p_norm},x}}(k)$ in [" + str(k_min) + "," + str(k_max) + "]",
+#                 disable=not show_progress
+#         ) as pbar:
+#             for k in domain_k:
+#                 array_k = np.append(
+#                     array_k,
+#                     1 / k * (1 + np.nansum(Orlicz_function((k * x[0])) * x[1])),
+#                 )
+#                 pbar.update(1)
+#     elif p_norm == np.inf:
+#         with tqdm(
+#                 total=len(domain_k),
+#                 # desc="counting of  infimum in [" + str(k_min) + "," + str(k_max) + "]",
+#                 desc=f"counting of  $\\kappa_{{p={p_norm},x}}(k)$ in [" + str(k_min) + "," + str(k_max) + "]",
+#                 disable=not show_progress
+#         ) as pbar:
+#             for k in domain_k:
+#                 array_k = np.append(
+#                     array_k,
+#                     1
+#                     / k
+#                     * (
+#                         max(
+#                             1,
+#                             np.nansum(Orlicz_function((k * x[0])) * x[1]),
+#                         )
+#                     ),
+#                 )
+#                 pbar.update(1)
+#     else:
+#         with tqdm(
+#                 total=len(domain_k),
+#                 # desc="counting of  infimum in [" + str(k_min) + "," + str(k_max) + "]",
+#                 desc=f"counting of  $\\kappa_{{p={p_norm},x}}(k)$ in [" + str(k_min) + "," + str(k_max) + "]",
+#                 disable=not show_progress
+#         ) as pbar:
+#             for k in domain_k:
+#                 array_k = np.append(
+#                     array_k,
+#                     1
+#                     / k
+#                     * (
+#                             1
+#                             + (
+#                                     np.nansum(Orlicz_function((k * x[0])) * x[1])
+#                                     ** p_norm
+#                             )
+#                     )
+#                     ** (1 / p_norm),
+#                 )
+#                 pbar.update(1)
+#     # print(array_k)
+#     return domain_k, array_k
 
 
 def Orlicz_norm_with_stars(
