@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import tqdm  # for progress bar
 import decimal as dc
+from numerical_function_spaces.orlicz_spaces.orlicz_functions import *
 
 
 def kappa(Orlicz_function, x, k, p_norm):
@@ -23,6 +24,13 @@ def kappa(Orlicz_function, x, k, p_norm):
     Raises:
     ValueError: If x[1, :] contains non-positive values.
 
+    Examples:
+    >>> x = np.array([[1],[1]])
+    >>> def Orlicz_function(u):
+    ...     return u
+    ...
+    >>> kappa(Orlicz_function, x=x, k=1, p_norm=1)
+    np.float64(2.0)
     """
     # x_abs = np.zeros(shape=np.shape(x))  # x[0, :] = abs(x[0, :]) powoduje zmianę zewnętrznej zmiennej!!! ???
     # x_abs[0, :] = abs(x[0, :])
