@@ -51,6 +51,31 @@ def p_Amemiya_norm(
         Orlicz_function,
         x: np.ndarray,
         p_norm: float):
+    """
+       Calculates the p_Amemiya norm for a given set of parameters.
+
+       Parameters
+       Orlicz_function : function
+           The Orlicz function to be used.
+       x : np.ndarray
+           A 2D numpy array representing x(t).
+       p_norm : float
+           The p-norm to be calculated.
+
+       Returns:
+       float: value of the p-Amemiya norm.
+
+       Raises:
+       ValueError: If x[1, :] contains non-positive values.
+
+       Examples:
+       >>> x = np.array([[1],[1]])
+       >>> def Orlicz_function(u):
+       ...     return u
+       ...
+       >>> p_Amemiya_norm(Orlicz_function, x=x, p_norm=1)
+       np.float64(1.0)
+       """
     val_k = np.empty([2, 5])  # domain and values kappa - for looking minimum
     val_k[:] = None
     val_k[1, 0] = 1
@@ -237,11 +262,25 @@ def p_Amemiya_norm_with_stars(
     len_domain_k : int, optional
         The number of points in the k domain, by default 1000.
     show_progress : bool, optional
-        Whether to show a progress bar during computation, by default False.
+        Whether to show a progress bar during computation, by default, False.
 
     Returns:
-    - A tuple containing the minimum value of the p-Amemiya norm, k^{*}, k^{**}, kappa_domain, and kappa_values.
+    - A tuple containing the value of the p-Amemiya norm, k^{*}, k^{**}.
+
+    Precision problem with k^* false less than k^** for Phi = max(u,2u-1), x=chi_(0,3), p=10.
+    Too small accuracy.
+    Problem eliminated in slower function p_Amemiya_norm_with_stars_by_decimal.
+
+    Examples:
+        >>> x = np.array([[1],[1]])
+        >>> def Orlicz_function(u):
+        ...     return u**2
+        ...
+        >>> p_Amemiya_norm_with_stars(Orlicz_function, x=x, p_norm=1)
+        (np.float64(2.000000000068931), np.float64(1.0000083024999067), np.float64(1.0000083024999067))
     """
+
+
 
     if any(x[1, :] <= 0):
         raise ValueError("wrong definition of x(t): x[1, :] must be positive")
@@ -418,7 +457,7 @@ def p_Amemiya_norm_with_stars(
         print('k_star is equal to k_min: try smaller k_min')
     if np.max(osiagane_minimum) == len_domain_k - 1:
         print('k_star_star is equal to k_max: try larger k_max')
-    return min(array_k), k_star, k_star_star, domain_k, array_k
+    return min(array_k), k_star, k_star_star  #, domain_k, array_k
 
 
 def p_Amemiya_norm_with_stars_by_decimal(
@@ -547,4 +586,5 @@ def p_Amemiya_norm_with_stars_by_decimal(
 
 
 if __name__ == "__main__":
-    pass
+    import doctest  # import the doctest library
+    doctest.testmod(verbose=True)  # run the tests and display all results (pass or fail)
