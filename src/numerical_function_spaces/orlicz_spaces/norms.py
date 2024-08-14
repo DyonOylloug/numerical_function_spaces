@@ -213,6 +213,35 @@ def Orlicz_norm_with_stars(
         len_domain_k: int = 1000,
         show_progress: bool = False
 ):
+    """
+    Computes the Orlicz norm and k^{*} and k^{**} of the function "x(t)"
+    in Orlicz space for a given set of parameters as p_Amimiya norm for p_norm=1
+
+    Parameters
+    Orlicz_function : function
+        The Orlicz function to be used.
+    x : np.ndarray
+        A 2D numpy array representing x(t).
+    k_min : float, optional
+        The minimum value of the k domain, by default 0.000001.
+    k_max : float, optional
+        The maximum value of the k domain, by default 100.
+    len_domain_k : int, optional
+        The number of points in the k domain, by default 1000.
+    show_progress : bool, optional
+        Whether to show a progress bar during computation, by default, False.
+
+    Returns:
+    - A tuple containing the value of the Orlicz norm, k^{*}, k^{**}.
+
+    Examples:
+        >>> x = np.array([[1],[2]])
+        >>> def Orlicz_function(u):
+        ...     return np.where(u <= 1, 0, u - 1)
+        ...
+        >>> Orlicz_norm_with_stars(Orlicz_function, x)
+        (np.float64(1.000008302431002), np.float64(1.0000083024999329), np.float64(1.0000083024999329))
+    """
     # return p_Amemiya_norm_with_stars(Orlicz_function, x, dt, 1, k_min, k_max, len_domain_k,
     #                                  show_progress=show_progress)
     return p_Amemiya_norm_with_stars(Orlicz_function, x, 1, k_min, k_max, len_domain_k,
@@ -228,6 +257,35 @@ def Luxemburg_norm_with_stars(
         len_domain_k: int = 1000,
         show_progress: bool = False
 ):
+    """
+    Computes the Luxemburg norm and k^{*} and k^{**} of the function "x(t)"
+    in Orlicz space for a given set of parameters as p_Amimiya norm for p_norm=np.inf
+
+    Parameters
+    Orlicz_function : function
+        The Orlicz function to be used.
+    x : np.ndarray
+        A 2D numpy array representing x(t).
+    k_min : float, optional
+        The minimum value of the k domain, by default 0.000001.
+    k_max : float, optional
+        The maximum value of the k domain, by default 100.
+    len_domain_k : int, optional
+        The number of points in the k domain, by default 1000.
+    show_progress : bool, optional
+        Whether to show a progress bar during computation, by default, False.
+
+    Returns:
+    - A tuple containing the value of the Luxemburg norm, k^{*}, k^{**}.
+
+    Examples:
+        >>> x = np.array([[1],[2]])
+        >>> def Orlicz_function(u):
+        ...     return np.where(u <= 1, 0, u - 1)
+        ...
+        >>> Luxemburg_norm_with_stars(Orlicz_function, x)
+        (np.float64(0.666712308582787), np.float64(1.4998973127189956), np.float64(1.4998973127189956))
+    """
     # return p_Amemiya_norm_with_stars(Orlicz_function, x, dt, np.inf, k_min, k_max, len_domain_k,
     #                                  show_progress=show_progress)
     return p_Amemiya_norm_with_stars(Orlicz_function, x, np.inf, k_min, k_max, len_domain_k,
@@ -477,11 +535,11 @@ def p_Amemiya_norm_with_stars_by_decimal(
 
     Parameters
     Orlicz_function : function
-        The Orlicz function to be used.
+        The Orlicz function to be used in form accepting decimal numbers
     x : np.ndarray
         A 2D numpy array representing x(t).
     p_norm : float
-        The p-norm to be calculated in decimal form.
+        The p-norm to be calculated (in decimal form).
     k_min : float, optional
         The minimum value of the k domain in decimal form, by default 1/100000.
     k_max : float, optional
@@ -496,6 +554,18 @@ def p_Amemiya_norm_with_stars_by_decimal(
 
     Raises:
     - ValueError: If any value in x[1, :] is less than or equal to 0.
+
+    Examples:
+        >>> x = np.array([[1], [2]])
+        >>> def Orlicz_function(u):
+        ...     return np.where(u <= 1, u, dc.Decimal(np.inf))
+        ...
+        >>> dc.getcontext().prec = 20
+        >>> p_Amemiya_norm_with_stars_by_decimal(Orlicz_function, x=x, p_norm=dc.Decimal(np.inf),
+        ...                                 k_min = dc.Decimal(4)/10,
+        ...                                 k_max = dc.Decimal(11)/10)
+        ...
+        (Decimal('1.9999999999999999999'), Decimal('0.5001'), Decimal('0.9999'))
     """
     if any(x[1, :] <= 0):
         raise ValueError("wrong definition of x(t): x[1, :] must be positive")
@@ -569,7 +639,7 @@ def p_Amemiya_norm_with_stars_by_decimal(
                 pbar.update(1)
     # print(array_k)
     kappa_values = np.array(kappa_values)
-    accuracy = dc.Decimal(10 ** (-dc.getcontext().prec + 1))
+    accuracy = dc.Decimal(10 ** (-dc.getcontext().prec + 2))  # + 1 is not enough
     osiagane_minimum = np.where(
         np.logical_and(
             kappa_values < kappa_values[np.nanargmin(kappa_values)] + accuracy,
@@ -582,7 +652,7 @@ def p_Amemiya_norm_with_stars_by_decimal(
         print('k_star is equal to k_min: try smaller k_min')
     if np.nanmax(osiagane_minimum) == len_domain_k - 1:
         print('k_star_star is equal to k_max: try larger k_max')
-    return np.nanmin(kappa_values), k_star, k_star_star, kappa_domain, kappa_values
+    return np.nanmin(kappa_values), k_star, k_star_star #, kappa_domain, kappa_values
 
 
 if __name__ == "__main__":
