@@ -1,8 +1,8 @@
 import decimal as dc
-
+import numpy as np
 from tqdm import tqdm  # for progress bar
 
-from numerical_function_spaces.orlicz_spaces.orlicz_functions import *
+# from numerical_function_spaces.orlicz_spaces.orlicz_functions import *
 
 
 def kappa(Orlicz_function, x, k, p_norm):
