@@ -16,11 +16,22 @@ author = u"Adam Bohonos"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+#    'nbsphinx',
+#    'sphinx.ext.mathjax',
     "myst_nb",
     "autoapi.extension",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
 ]
+
+myst_enable_extensions = [
+    "amsmath",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "html_image",
+]
+
 autoapi_dirs = ["../src"]
 
 # List of patterns, relative to source directory, that match files and
