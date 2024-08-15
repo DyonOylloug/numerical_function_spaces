@@ -40,3 +40,9 @@ def Orlicz_function_L_inf(u):
     Phi(u) = 0 if u<=1 else np.inf
     """
     return np.where(u <= 1, 0, np.inf)
+
+
+if __name__ == "__main__":
+    import doctest  # import the doctest library
+
+    doctest.testmod(verbose=True)  # run the tests and display all results (pass or fail)
