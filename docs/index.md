@@ -5,7 +5,8 @@
 :maxdepth: 1
 :hidden:
 
-example
+norms.ipynb
+plots.ipynb
 changelog.md
 contributing.md
 conduct.md
