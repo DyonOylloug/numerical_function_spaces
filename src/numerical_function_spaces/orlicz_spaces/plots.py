@@ -83,10 +83,11 @@ def description_for_plot(p_norm: float):
 def plot_kappa(
         Orlicz_function,
         x: np.ndarray,
-        k_min: float,
-        k_max: float,
-        dk: float,
         p_norm: float,
+        k_min: float = 0.01,
+        k_max: float = 10,
+        dk: float = 0.01,
+        len_domain_k: int = 1000,
         show_progress: bool = False,
         figsize: tuple = (5, 4),
         show: bool = True,
@@ -94,16 +95,54 @@ def plot_kappa(
         save_name: str = None,
         title: str = None
 ):
+    """
+    Plot kappa() function and save the current figure in different formats (PNG, SVG, PDF).
+
+    Parameters
+    ----------
+    Orlicz_function : function
+        The Orlicz function to be used in form accepting decimal numbers
+    x : np.ndarray
+        A 2D numpy array representing x(t).
+    k_min : float, optional
+        The minimum value of the k domain in decimal form, by default 0.01.
+    k_max : float, optional
+        The maximum value of the k domain in decimal form, by default 10.
+    dk : float, optional
+        Step of k_domain, by default 0.01
+        When given, more important than len_domain_k
+    len_domain_k : int, optional
+        The number of points in the k domain, by default 1000.
+    show_progress : bool, optional
+        Whether to show a progress bar during computation, by default False.
+    figsize : tuple, optional
+        Size of plots, by default (5,4)
+    show : bool, optional
+        Whether to show plot, by default True.
+    save : bool, optional
+        Whether to save plot in pdf, png, svg formats in plots folder, by default False.
+    save_name : string, optional
+        Name for saved plots, by default 'kappa_{p_norm}.pdf'
+    title : string, optional
+        Title for plots, by default 'kappa_{p,x}(k)'
+
+    Returns
+    -------
+    The function saves the figure in folder 'plots' : None
+    """
     # domain_k, array_k = array_for_infimum(  # tu można użyć funkcji kappa - będzie szybciej.
     #     Orlicz_function,
     #     x,
     #     # dt,
+    #     k_min,
     #     k_min,
     #     k_max,
     #     dk,
     #     p_norm,
     #     show_progress
     # )
+    if len_domain_k != 1000:  # if len_domain_k is specified by user
+        dk = (k_max - k_min) / len_domain_k
     domain_k = np.arange(k_min, k_max, dk)
     array_k = np.array([])
     with tqdm(
