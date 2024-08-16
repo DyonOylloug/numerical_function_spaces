@@ -11,6 +11,7 @@ $ pip install numerical_function_spaces
 ## Usage
 
 - TODO
+- Online documentation on [readthedocs](https://numerical-function-spaces.readthedocs.io/en/latest/index.html)
 
 ## Contributing
 
