@@ -1,6 +1,8 @@
 import decimal as dc
+
 import numpy as np
 from tqdm import tqdm  # for progress bar
+
 
 # from numerical_function_spaces.orlicz_spaces.orlicz_functions import *
 
@@ -559,7 +561,7 @@ def p_Amemiya_norm_with_stars_by_decimal(
         k_min: dc.Decimal = dc.Decimal(1) / 100000,
         k_max: dc.Decimal = dc.Decimal(100),
         dk: dc.Decimal = dc.Decimal(1) / 100,
-        len_domain_k: dc.Decimal = 1000,
+        len_domain_k: int = 1000,
         show_progress: bool = False
 ) -> tuple:
     """
@@ -578,11 +580,11 @@ def p_Amemiya_norm_with_stars_by_decimal(
         The minimum value of the k domain in decimal form, by default 1/100000.
     k_max : float, optional
         The maximum value of the k domain in decimal form, by default 100.
-    k : float, optional
+    dk : float, optional
         Step of k_domain, by default 0.01
-        When given, more important than len_domain_k
     len_domain_k : int, optional
         The number of points in the k domain in decimal form, by default 1000.
+        When given, more important than dk
     show_progress : bool, optional
         Whether to show a progress bar during computation, by default False.
 
@@ -614,12 +616,12 @@ def p_Amemiya_norm_with_stars_by_decimal(
         dk = (k_max - k_min) / len_domain_k
     kappa_domain = []
     # n = dc.Decimal(0)
-    # while k_min + n * dk <= k_max:
-    for n in range(len_domain_k):
-        kappa_domain.append(k_min + n * dk)
-        # n += dc.Decimal(1)
-    kappa_domain = np.array(kappa_domain)
-    # domain_k = np.arange(k_min, k_max, dk)
+    # while k_min + n * dk < k_max:
+    # # for n in range(len_domain_k):
+    #     kappa_domain.append(k_min + n * dk)
+    #     n += dc.Decimal(1)
+    # kappa_domain = np.array(kappa_domain)
+    kappa_domain = np.arange(k_min, k_max, dk)
     kappa_values = []
     if p_norm == 1:
         with tqdm(

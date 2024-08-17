@@ -1,12 +1,17 @@
 import os
-import numpy as np
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from tqdm import tqdm  # for progress bar
+import numpy as np
+
 if __name__ == '__main__':
-    from norms import *  # kappa
+    from norms import *
 else:
-    from .norms import *  # kappa
+    from .norms import *
+if __name__ == '__main__':
+    from conjugate import *
+else:
+    from .conjugate import *
 
 # my_path = os.path.dirname(
 #     os.path.abspath(__file__)
@@ -96,7 +101,7 @@ def plot_kappa(
         title: str = None
 ):
     """
-    Plot kappa() function and save the current figure in different formats (PNG, SVG, PDF).
+    Plot kappa() function and (optionally) save the current figure in different formats (PNG, SVG, PDF) in plots folder.
 
     Parameters
     ----------
@@ -128,7 +133,7 @@ def plot_kappa(
 
     Returns
     -------
-    The function saves the figure in folder 'plots' : None
+    The function generates a figure and (optionally) save in folder 'plots' : None
     """
     # domain_k, array_k = array_for_infimum(  # tu można użyć funkcji kappa - będzie szybciej.
     #     Orlicz_function,
@@ -306,6 +311,163 @@ def plot_kappa(
     # fig.savefig(my_path + f"/plots/kappa_{p_norm}.png", dpi=1200)
     # fig.savefig(my_path + f"/plots/kappa_{p_norm}.svg")
     # fig.savefig(my_path + f"/plots/kappa_{p_norm}.pdf")
+
+
+def plot_Phi_p_plus_Psi(
+        Orlicz_function,
+        u_max: float,
+        du: float,
+        max_u_on_plots: float,
+        p_plus: np.ndarray = None,
+        Psi: np.ndarray = None,
+        figsize: tuple = (9, 3),
+        show: bool = True,
+        save: bool = False,
+):
+    """
+     Plot Orlicz_function, right side derivative and conjugate function on one plot
+     and (optionally) save the current figure in different formats (PNG, SVG, PDF) in plots folder.
+
+     Parameters
+     ----------
+     Orlicz_function : function
+         The Orlicz function to be used in form accepting decimal numbers
+     du : float
+        Step of u_domain for Orlicz function
+     u_max: float
+         Right limit of u_domain for Orlicz function
+     max_u_on_plots: float
+         May be the same or smaller to u_max (bigger u_max may improve Psi accuracy)
+     p_plus : np.ndarray, optional (if given must use the same u_max and du as given for plot)
+         A 1D numpy array representing right side derivative p_{+}(u)
+     Psi : np.ndarray, optional (if given must use the same u_max and du as given for plot)
+         A 1D numpy array representing right conjugate function Psi(u)
+     figsize : tuple, optional
+         Size of plots, by default (5,4)
+     show : bool, optional
+         Whether to show plot, by default True.
+     save : bool, optional
+         Whether to save plot in pdf, png, svg formats in plots folder, by default False.
+
+     Returns
+     -------
+     The function generates a figure and (optionally) save in folder 'plots' : None
+     """
+    u = np.arange(0, u_max, du, dtype=np.float64)  # domain of u
+
+    Phi = Orlicz_function(u)
+
+    if p_plus is None:
+        p_plus = right_side_derivative(Orlicz_function, u_max=u_max, du=du)
+
+    if Psi is None:
+        Psi = conjugate_function(Orlicz_function, u_max=100, du=0.01)
+
+    b_Phi = 0
+    for b_Phi in range(len(Phi)):
+        if Phi[b_Phi] == np.inf:
+            break
+    b_Psi = 0
+    for b_Psi in range(len(u)):
+        if Psi[b_Psi] == np.inf:
+            break
+    if b_Psi < len(u) - 1 and b_Psi * du >= 0.95 * max_u_on_plots:
+        print(f'\x1b[41m b_Psi > {max_u_on_plots}\x1b[0m')
+        max_u_on_plots = 1.3 * b_Psi * du  # to see b_Psi on plotb
+
+
+
+    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=figsize)
+
+    if b_Phi < len(u) - 1:
+        axes[0].plot(
+            u[:b_Phi],
+            Phi[:b_Phi],
+            label="$\\Phi(u)$",
+            linewidth=2,
+        )
+        axes[0].plot(
+            u[b_Phi: int(max_u_on_plots / du)],
+            np.full(
+                (len(u[b_Phi: int(max_u_on_plots / du)])),
+                max(1, 2 * max(Phi[: int(b_Phi - 1)])),
+            ),
+            "--",
+            label="$\\Phi(u) = \\infty$",
+            linewidth=2,
+        )
+        axes[1].plot(
+            u[:b_Phi],
+            p_plus[:b_Phi],
+            label="$p_{+}(u)$",
+            linewidth=2,
+        )
+        axes[1].plot(
+            u[b_Phi: int(max_u_on_plots / du)],
+            np.full(
+                (len(u[b_Phi: int(max_u_on_plots / du)])),
+                max(1, 2 * max(p_plus[: int(b_Phi - 1)])),
+            ),
+            "--",
+            label="$p_{+}(u) = \\infty$",
+            linewidth=2,
+        )
+    else:
+        axes[0].plot(
+            u[: int(max_u_on_plots / du)],
+            Phi[: int(max_u_on_plots / du)],
+            label="$\\Phi(u)$",
+            linewidth=2,
+        )
+        axes[1].plot(
+            u[: int(max_u_on_plots / du)],
+            p_plus[: int(max_u_on_plots / du)],
+            label="$p_{+}(u)$",
+            linewidth=2,
+        )
+    # to avoid strange plot for Phi(u) = u and similars
+    axes[1].axis(
+        ymin=-0.05 * axes[1].get_ylim()[1],
+        ymax=1.05 * axes[1].get_ylim()[1],
+    )
+
+    if b_Psi < len(u) - 1:
+        axes[2].plot(
+            u[:b_Psi],
+            Psi[:b_Psi],
+            label="$\\Psi(u)$",
+            linewidth=2,
+        )
+        axes[2].plot(
+            u[b_Psi: int(max_u_on_plots / du)],
+            np.full(
+                (len(u[b_Psi: int(max_u_on_plots / du)])),
+                max(1, 2 * max(Psi[: int(b_Psi - 1)])),
+            ),
+            "--",
+            label="$\\Psi(u) = \\infty$",
+            linewidth=2,
+        )
+    else:
+        axes[2].plot(
+            u[: int(max_u_on_plots / du)],
+            Psi[: int(max_u_on_plots / du)],
+            label="$\\Psi(u)$",
+            linewidth=2,
+        )
+    # fig.suptitle(r'$\Phi(u), p_+(u), \Psi(u)$')
+    for ax in axes:
+        ax.locator_params(axis="x", nbins=10)
+        ax.legend()
+    fig.tight_layout()
+    if save == True:
+        plot_save(name='Phi_p_plus_Psi')
+    if show is True:
+        plt.show()
+    plt.close()
+    # fig.savefig(my_path + "/plots/Phi_Psi_pp.png", dpi=1200)
+    # fig.savefig(my_path + "/plots/Phi_Psi_pp.svg")
+    # fig.savefig(my_path + "/plots/Phi_Psi_pp.pdf")
 
 
 if __name__ == "__main__":
