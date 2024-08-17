@@ -222,7 +222,7 @@ def Orlicz_norm_with_stars(
         # dt: float,
         k_min: float = 0.000001,
         k_max: float = 100,
-        dk: float = 0.01,
+        dk: float = None,
         len_domain_k: int = 1000,
         show_progress: bool = False
 ):
@@ -241,7 +241,7 @@ def Orlicz_norm_with_stars(
     k_max : float, optional
         The maximum value of the k domain, by default 100.
     dk : float, optional
-        Step of k_domain, by default 0.01
+        Step of k_domain, by default None
         When given, more important than len_domain_k
     len_domain_k : int, optional
         The number of points in the k domain, by default 1000.
@@ -259,7 +259,7 @@ def Orlicz_norm_with_stars(
         ...     return np.where(u <= 1, 0, u - 1)
         ...
         >>> Orlicz_norm_with_stars(Orlicz_function, x)
-        (np.float64(1.0000083025300166), np.float64(1.0000083025989492), np.float64(1.0000083025989492))
+        (np.float64(1.000008302431002), np.float64(1.0000083024999329), np.float64(1.0000083024999329))
     """
     # return p_Amemiya_norm_with_stars(Orlicz_function, x, dt, 1, k_min, k_max, len_domain_k,
     #                                  show_progress=show_progress)
@@ -273,7 +273,7 @@ def Luxemburg_norm_with_stars(
         # dt: float,
         k_min: float = 0.000001,
         k_max: float = 100,
-        dk: float = 0.01,
+        dk: float = None,
         len_domain_k: int = 1000,
         show_progress: bool = False
 ):
@@ -292,7 +292,7 @@ def Luxemburg_norm_with_stars(
     k_max : float, optional
         The maximum value of the k domain, by default 100.
     dk : float, optional
-        Step of k_domain, by default 0.01
+        Step of k_domain, by default None
         When given, more important than len_domain_k
     len_domain_k : int, optional
         The number of points in the k domain, by default 1000.
@@ -310,7 +310,7 @@ def Luxemburg_norm_with_stars(
         ...     return np.where(u <= 1, 0, u - 1)
         ...
         >>> Luxemburg_norm_with_stars(Orlicz_function, x)
-        (np.float64(0.666712308484268), np.float64(1.499897312940633), np.float64(1.499897312940633))
+        (np.float64(0.666712308582787), np.float64(1.4998973127189956), np.float64(1.4998973127189956))
     """
     # return p_Amemiya_norm_with_stars(Orlicz_function, x, dt, np.inf, k_min, k_max, len_domain_k,
     #                                  show_progress=show_progress)
@@ -325,7 +325,7 @@ def p_Amemiya_norm_with_stars(
         p_norm: float,
         k_min: float = 0.000001,
         k_max: float = 100,
-        dk: float = 0.01,
+        dk: float = None,
         len_domain_k: int = 1000,
         show_progress: bool = False
 ):
@@ -346,7 +346,7 @@ def p_Amemiya_norm_with_stars(
     k_max : float, optional
         The maximum value of the k domain, by default 100.
     dk : float, optional
-        Step of k_domain, by default 0.01
+        Step of k_domain, by default None
         When given, more important than len_domain_k
     len_domain_k : int, optional
         The number of points in the k domain, by default 1000.
@@ -359,7 +359,7 @@ def p_Amemiya_norm_with_stars(
 
     Note
     ----
-    Precision problem with k^{*} false less than k^{**} for Phi = max(u,2u-1), x=chi_(0,3), p=10.
+    Precision problem with k^{*} false less than k^{**} for Phi = max(u,2u-1), x=chi_(0,3), p=20.
     Too small accuracy.
 
     Problem eliminated in slower function p_Amemiya_norm_with_stars_by_decimal().
@@ -371,7 +371,7 @@ def p_Amemiya_norm_with_stars(
         ...     return u**2
         ...
         >>> p_Amemiya_norm_with_stars(Orlicz_function, x=x, p_norm=1)
-        (np.float64(2.0000000000689324), np.float64(1.0000083025989634), np.float64(1.0000083025989634))
+        (np.float64(2.000000000068931), np.float64(1.0000083024999067), np.float64(1.0000083024999067))
     """
 
     if any(x[1, :] <= 0):
@@ -382,8 +382,10 @@ def p_Amemiya_norm_with_stars(
     # k_min = 0.000001
     # k_max = 100
     # len_domain_k = 1000
-    if len_domain_k != 1000:  # if len_domain_k is specified by user
+    if dk is None:  # if len_domain_k is specified by user
         dk = (k_max - k_min) / len_domain_k
+    else:
+        len_domain_k == (k_max - k_min) * dk
 
     # domain_k = np.arange(k_min, k_max, dk)
     # print("k_min = ", k_min, ",k_max= ", k_max)
@@ -548,7 +550,7 @@ def p_Amemiya_norm_with_stars(
     # print(np.nanmin(osiagane_minimum), np.nanmax(osiagane_minimum))
     if np.min(osiagane_minimum) == 0:
         print('k_star is equal to k_min: try smaller k_min')
-    if np.max(osiagane_minimum) == len_domain_k - 1:
+    if np.max(osiagane_minimum) == len(domain_k) - 1:
         print('k_star_star is equal to k_max: try larger k_max')
     return min(array_k), k_star, k_star_star  # , domain_k, array_k
 
@@ -560,7 +562,7 @@ def p_Amemiya_norm_with_stars_by_decimal(
         p_norm: dc.Decimal,
         k_min: dc.Decimal = dc.Decimal(1) / 100000,
         k_max: dc.Decimal = dc.Decimal(100),
-        dk: dc.Decimal = dc.Decimal(1) / 100,
+        dk: dc.Decimal = None,
         len_domain_k: int = 1000,
         show_progress: bool = False
 ) -> tuple:
@@ -581,10 +583,10 @@ def p_Amemiya_norm_with_stars_by_decimal(
     k_max : float, optional
         The maximum value of the k domain in decimal form, by default 100.
     dk : float, optional
-        Step of k_domain, by default 0.01
+        Step of k_domain, by default None
+        When given, more important than len_domain_k
     len_domain_k : int, optional
         The number of points in the k domain in decimal form, by default 1000.
-        When given, more important than dk
     show_progress : bool, optional
         Whether to show a progress bar during computation, by default False.
 
@@ -605,15 +607,18 @@ def p_Amemiya_norm_with_stars_by_decimal(
         >>> dc.getcontext().prec = 20
         >>> p_Amemiya_norm_with_stars_by_decimal(Orlicz_function, x=x, p_norm=dc.Decimal(np.inf),
         ...                                 k_min = dc.Decimal(4)/10,
-        ...                                 k_max = dc.Decimal(11)/10)
+        ...                                 k_max = dc.Decimal(11)/10,
+        ...                                 dk = dc.Decimal(1)/100)
         ...
         (Decimal('1.9999999999999999999'), Decimal('0.50'), Decimal('1.00'))
     """
     if any(x[1, :] <= 0):
         raise ValueError("wrong definition of x(t): x[1, :] must be positive")
     x = abs(x)
-    if len_domain_k != 1000:  # if user specifies len_domain_k
+    if dk is None:  # if user specifies len_domain_k
         dk = (k_max - k_min) / len_domain_k
+    else:
+        len_domain_k = (k_max - k_min) * dk
     kappa_domain = []
     # n = dc.Decimal(0)
     # while k_min + n * dk < k_max:
@@ -691,9 +696,10 @@ def p_Amemiya_norm_with_stars_by_decimal(
     )
     k_star = kappa_domain[np.nanmin(osiagane_minimum)]
     k_star_star = kappa_domain[np.nanmax(osiagane_minimum)]
+
     if np.nanmin(osiagane_minimum) == 0:
         print('k_star is equal to k_min: try smaller k_min')
-    if np.nanmax(osiagane_minimum) == len_domain_k - 1:
+    if np.nanmax(osiagane_minimum) == len(kappa_domain) - 1:
         print('k_star_star is equal to k_max: try larger k_max')
     return np.nanmin(kappa_values), k_star, k_star_star  # , kappa_domain, kappa_values
 
