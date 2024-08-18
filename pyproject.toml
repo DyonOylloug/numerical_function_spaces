@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "numerical_function_spaces"
-version = "0.2.0"
+version = "0.3.0"
 description = "An attempt to numerically study the geometry of the Orlicz function spaces"
 authors = ["Adam Bohonos"]
 license = "MIT"
@@ -29,4 +29,12 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.semantic_release]
 version_variable = "pyproject.toml:version"
+version_source = "tag"
+
+version_toml = [
+    "pyproject.toml:tool.poetry.version",
+]                                                     # version location
+branch = "main"                                       # branch to make releases of
+changelog_file = "CHANGELOG.md"                       # changelog file
+build_command = "pip install poetry && poetry build"  # build dists  
 

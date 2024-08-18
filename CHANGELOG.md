@@ -1,5 +1,39 @@
 # CHANGELOG
 
+## v0.3.0 (2024-08-18)
+
+### Build
+
+* build: add PSR as dev dependency ([`1705832`](https://github.com/DyonOylloug/numerical_function_spaces/commit/170583269a82ddae459a0bd25a9c175d55eb22d0))
+
+### Documentation
+
+* docs: more examples of usage ([`f8816e0`](https://github.com/DyonOylloug/numerical_function_spaces/commit/f8816e0d7a6e8a4b29dbe3771e4ab5a637b73130))
+
+* docs: add conjugate plots to docs ([`153c8f9`](https://github.com/DyonOylloug/numerical_function_spaces/commit/153c8f90f2d8a66992fdc0392ea9906a8220312c))
+
+* docs: example of accuracy problem with norms ([`0432046`](https://github.com/DyonOylloug/numerical_function_spaces/commit/04320467a7830633030123e1920d4741fbf92559))
+
+### Feature
+
+* feat: add plot_p_norms ([`8a2833e`](https://github.com/DyonOylloug/numerical_function_spaces/commit/8a2833e1fdb0546b283eec55889b5b0d5c0d6863))
+
+* feat: add p_plus and conjugate function and plots of them ([`72faea9`](https://github.com/DyonOylloug/numerical_function_spaces/commit/72faea99530f6b3832e97bb9a549afa443255d01))
+
+### Performance
+
+* perf: add dk parameter ([`8cf3578`](https://github.com/DyonOylloug/numerical_function_spaces/commit/8cf3578aae69a31f6a99c91c390f585cfd7042aa))
+
+### Refactor
+
+* refactor: add rozne_testy.ipynb to .gitignore ([`b1cf893`](https://github.com/DyonOylloug/numerical_function_spaces/commit/b1cf8938f56576a4b56506c394d5395e7080222e))
+
+* refactor: change version to v0.2.0 in pyproject.toml ([`ce6daa7`](https://github.com/DyonOylloug/numerical_function_spaces/commit/ce6daa7193128412f566cbea5a618a114d1335a4))
+
+### Style
+
+* style: some comments ([`8c8bb51`](https://github.com/DyonOylloug/numerical_function_spaces/commit/8c8bb513ae0be29746d478aa97554bc9ff270f0d))
+
 ## v0.2.0 (2024-08-17)
 
 ### Build
