@@ -45,7 +45,7 @@ def plot_save(name: str = 'plot', p_norm: float = ''):
         os.makedirs(my_path + '/plots')
         print(" ! New folder \"plots\" - for plots ")
     else:
-        print("Folder \"plots\" ")
+        print("Images will be in folder \"plots\" ")
     if not os.path.exists(my_path + '/plots/pdf'):
         os.makedirs(my_path + '/plots/pdf')
         print(" ! New folder \"plots\\pdf\" - for plots in pdf format")
@@ -83,6 +83,53 @@ def description_for_plot(p_norm: float):
             "$\\frac{1}{k}\\left(1+I_{\\Phi}^p(k\\, x) \\right)^{1 / p}$"
         )
     return opis
+
+
+def plot_p_norms(Orlicz_function,
+                 x,
+                 # dt,
+                 p_min=1,
+                 p_max=50,
+                 dp=2,
+                 attach_inf=False,
+                 show_progress=False,
+                 figsize: tuple = (5, 4),
+                 show: bool = True,
+                 save: bool = False,
+                 ):
+    norms = []
+    for ind in tqdm(np.arange(p_min, p_max, dp), disable=not show_progress):
+        # norms.append(p_Amemiya_norm_with_stars(Orlicz_function, x, dt, p_norm=ind)[0])
+        norms.append(p_Amemiya_norm(Orlicz_function, x, p_norm=ind))
+    if attach_inf:
+        # norms.append(p_Amemiya_norm_with_stars(Orlicz_function, x, dt, p_norm=np.inf)[0])
+        norms.append(p_Amemiya_norm(Orlicz_function, x, p_norm=np.inf))
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.locator_params(nbins=10, axis='x')
+    ax.scatter(p_min, norms[0], label='$||x||_{p=' + str(p_min) + '}=$' + str(norms[0]))
+    if attach_inf:
+        ax.plot(np.arange(p_min, p_max, dp), norms[0:-1], "-", marker='.', label='$||x||_{p}$')
+        ax.plot([np.arange(p_min, p_max, dp)[-1], p_max * 1.3], [norms[-2], norms[-1]], ":")
+        # ax.set_xticks(ax.get_xticks().astype(int))  # wrong result for fractional p
+        # print(ax.get_xticks())
+        ax.scatter(p_max * 1.3, norms[-1], marker='s', label='$||x||_{p=\\infty}=$' + str(norms[-1]))
+        ax.set_xticks(list(ax.get_xticks()[1:-2]) + list([p_max * 1.3]),
+                      list(ax.get_xticks()[1:-2]) + list(['$\\infty$']))
+    else:
+        ax.plot(np.arange(p_min, p_max, dp), norms[::], "-", marker='.', label='$||x||_{p}$')
+        ax.scatter(np.arange(p_min, p_max, dp)[-1], norms[-1],
+                   label='$||x||_{p=' + str(np.arange(p_min, p_max, dp)[-1]) + '}=$' + str(norms[-1]))
+
+    ax.legend()
+    ax.annotate("$p$", xy=(1.03, -0.08), xycoords="axes fraction")
+    if save is True:
+        plot_save(name='p_norms')
+    if show is True:
+        plt.show()
+    plt.close()
+    # fig.savefig(my_path + "/plots/p_norms.png", dpi=1200)
+    # fig.savefig(my_path + "/plots/p_norms.svg")
+    # fig.savefig(my_path + "/plots/p_norms.pdf")
 
 
 def plot_kappa(
@@ -361,7 +408,7 @@ def plot_Phi_p_plus_Psi(
         p_plus = right_side_derivative(Orlicz_function, u_max=u_max, du=du)
 
     if Psi is None:
-        Psi = conjugate_function(Orlicz_function, u_max=100, du=0.01)
+        Psi = conjugate_function(Orlicz_function, u_max=u_max, du=du)
 
     b_Phi = 0
     for b_Phi in range(len(Phi)):
@@ -374,8 +421,6 @@ def plot_Phi_p_plus_Psi(
     if b_Psi < len(u) - 1 and b_Psi * du >= 0.95 * max_u_on_plots:
         print(f'\x1b[41m b_Psi > {max_u_on_plots}\x1b[0m')
         max_u_on_plots = 1.3 * b_Psi * du  # to see b_Psi on plotb
-
-
 
     fig, axes = plt.subplots(nrows=1, ncols=3, figsize=figsize)
 
