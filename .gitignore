@@ -144,3 +144,4 @@ dmypy.json
 # ignore vim temporary files
 *~
 
+/rozne_testy.ipynb
