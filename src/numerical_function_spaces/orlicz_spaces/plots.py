@@ -515,6 +515,84 @@ def plot_Phi_p_plus_Psi(
     # fig.savefig(my_path + "/plots/Phi_Psi_pp.pdf")
 
 
+def plot_Phi(
+        Orlicz_function,
+        u_max: float,
+        du: float,
+        max_u_on_plots: float,
+        figsize: tuple = (6, 5),
+        show: bool = True,
+        save: bool = False,
+):
+    """
+     Plot Orlicz_function, right side derivative and conjugate function on one plot
+     and (optionally) save the current figure in different formats (PNG, SVG, PDF) in plots folder.
+
+     Parameters
+     ----------
+     Orlicz_function : function
+         The Orlicz function to be used in form accepting decimal numbers
+     du : float
+        Step of u_domain for Orlicz function
+     u_max: float
+         Right limit of u_domain for Orlicz function
+     max_u_on_plots: float
+         May be the same or smaller to u_max (bigger u_max may improve Psi accuracy)
+     figsize : tuple, optional
+         Size of plots, by default (5,4)
+     show : bool, optional
+         Whether to show plot, by default True.
+     save : bool, optional
+         Whether to save plot in pdf, png, svg formats in plots folder, by default False.
+
+     Returns
+     -------
+     The function generates a figure and (optionally) save in folder 'plots' : None
+     """
+    u = np.arange(0, u_max, du, dtype=np.float64)  # domain of u
+
+    Phi = Orlicz_function(u)
+
+    b_Phi = 0
+    for b_Phi in range(len(Phi)):
+        if Phi[b_Phi] == np.inf:
+            break
+    fig, axes = plt.subplots()
+
+    if b_Phi < len(u) - 1:
+        axes.plot(
+            u[:b_Phi],
+            Phi[:b_Phi],
+            label="$\\Phi(u)$",
+            linewidth=2,
+        )
+        axes.plot(
+            u[b_Phi: int(max_u_on_plots / du)],
+            np.full(
+                (len(u[b_Phi: int(max_u_on_plots / du)])),
+                max(1, 2 * max(Phi[: int(b_Phi - 1)])),
+            ),
+            "--",
+            label="$\\Phi(u) = \\infty$",
+            linewidth=2,
+        )
+    else:
+        axes.plot(
+            u[: int(max_u_on_plots / du)],
+            Phi[: int(max_u_on_plots / du)],
+            label="$\\Phi(u)$",
+            linewidth=2,
+        )
+    # fig.suptitle(r'$\Phi(u), p_+(u), \Psi(u)$')
+    axes.locator_params(axis="x", nbins=10)
+    axes.legend()
+    fig.tight_layout()
+    if save == True:
+        plot_save(name='Phi_p_plus_Psi')
+    if show is True:
+        plt.show()
+    plt.close()
+
 if __name__ == "__main__":
     import doctest  # import the doctest library
 
