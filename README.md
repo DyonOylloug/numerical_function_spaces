@@ -7,11 +7,15 @@ An attempt to numerically study the geometry of the Orlicz function spaces
 ```bash
 $ pip install numerical_function_spaces
 ```
+or 
+```bash
+git clone https://github.com/DyonOylloug/numerical_function_spaces
+cd numerical_function_spaces
+pip install .
+```
 
 ## Usage
-
-- TODO
-- Online documentation on [readthedocs](https://numerical-function-spaces.readthedocs.io/en/latest/index.html)
+- Online documentation on [readthedocs.](https://numerical-function-spaces.readthedocs.io/en/latest/index.html)
 
 ## Contributing
 
