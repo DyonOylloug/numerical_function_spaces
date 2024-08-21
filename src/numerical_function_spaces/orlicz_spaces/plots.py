@@ -138,7 +138,7 @@ def plot_kappa(
         p_norm: float,
         k_min: float = 0.01,
         k_max: float = 10,
-        dk: float = 0.01,
+        dk: float = None,
         len_domain_k: int = 1000,
         show_progress: bool = False,
         figsize: tuple = (5, 4),
@@ -161,7 +161,7 @@ def plot_kappa(
     k_max : float, optional
         The maximum value of the k domain in decimal form, by default 10.
     dk : float, optional
-        Step of k_domain, by default 0.01
+        Step of k_domain, by default None
         When given, more important than len_domain_k
     len_domain_k : int, optional
         The number of points in the k domain, by default 1000.
@@ -182,19 +182,12 @@ def plot_kappa(
     -------
     The function generates a figure and (optionally) save in folder 'plots' : None
     """
-    # domain_k, array_k = array_for_infimum(  # tu można użyć funkcji kappa - będzie szybciej.
-    #     Orlicz_function,
-    #     x,
-    #     # dt,
-    #     k_min,
-    #     k_min,
-    #     k_max,
-    #     dk,
-    #     p_norm,
-    #     show_progress
-    # )
-    if len_domain_k != 1000:  # if len_domain_k is specified by user
+
+    if dk is None:  # if user does not specify dk
         dk = (k_max - k_min) / len_domain_k
+    # else:
+    #     len_domain_k == (k_max - k_min) * dk
+
     domain_k = np.arange(k_min, k_max, dk)
     array_k = np.array([])
     with tqdm(
@@ -573,6 +566,7 @@ def plot_Phi(
                 max(1, 2 * max(Phi[: int(b_Phi - 1)])),
             ),
             "--",
+            "--",
             label="$\\Phi(u) = \\infty$",
             linewidth=2,
         )
@@ -592,6 +586,462 @@ def plot_Phi(
     if show is True:
         plt.show()
     plt.close()
+
+
+def array_for_alpha(
+        Orlicz_function,
+        du: float,
+        u_max: float,
+        x: np.ndarray,
+        # dt: float,
+        p_norm: float,
+        p_plus: np.ndarray = None,
+        Psi: np.ndarray = None,
+        k_min: float = 0.01,
+        k_max: float = 100,
+        dk: float = None,
+        len_domain_k: int = 1000,
+        show_progress: bool = False
+):
+    """
+    Calculate domain and values of alpha() function.
+
+    Parameters
+    ----------
+    Orlicz_function : function
+        The Orlicz function to be used in form accepting decimal numbers
+    du : float
+        Step of u_domain for Orlicz, p_plus and Psi function
+    u_max: float
+         Right limit of u_domain for Orlicz function
+    x : np.ndarray
+        A 2D numpy array representing x(t).
+    p_norm : float
+        The p-norm to be calculated.
+    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+         A 1D numpy array representing right side derivative p_{+}(u)
+    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+         A 1D numpy array representing right conjugate function Psi(u)
+    k_min : float, optional
+        The minimum value of the k domain in decimal form, by default 0.01.
+    k_max : float, optional
+        The maximum value of the k domain in decimal form, by default 10.
+    dk : float, optional
+        Step of k_domain, by default None
+        When given, more important than len_domain_k
+    len_domain_k : int, optional
+        The number of points in the k domain, by default 1000.
+    show_progress : bool, optional
+        Whether to show a progress bar during computation, by default False.
+
+    Returns
+    -------
+    Two numpy arrays, first for alpha domain, second for alpha values.
+    """
+    # u_max = len(Psi) * du
+    u = np.arange(0, u_max, du, dtype=np.float64)  # domain of u
+
+    Phi = Orlicz_function(u)
+
+    if p_plus is None:
+        p_plus = right_side_derivative(Orlicz_function, u_max=u_max, du=du, show_progress=show_progress)
+
+    if Psi is None:
+        Psi = conjugate_function(Orlicz_function, u_max=u_max, du=du, show_progress=show_progress)
+
+    if dk is None:  # if user does not specify dk
+        dk = (k_max - k_min) / len_domain_k
+    # else:
+    #     len_domain_k == (k_max - k_min) * dk
+
+    x = abs(x)
+
+    b_p = 0
+    for b_p in range(len(p_plus)):
+        if p_plus[b_p] == np.inf:
+            break
+    if p_norm == 1:
+        # t = np.arange(0, len(x) * dt, dt, dtype=np.float64)
+        domain_k = np.arange(k_min, k_max, dk)
+        array_alpha = np.array([])
+        too_big_k = False  # for print too big k only once
+        # with tqdm(total=len(domain_k), desc="counting of  k* and k**", disable=not show_progress) as pbar:
+        with tqdm(total=len(domain_k), desc=f"counting of  $\\alpha_{{p={p_norm},x}}(k)$",
+                  disable=not show_progress) as pbar:
+            for k in domain_k:
+                suma = 0
+                if too_big_k is False:
+                    # print('k=',k)
+                    for ind in range(len(x[1, :])):
+                        k_x = np.floor(  # albo round albo sufit
+                            k * x[0, ind] / du
+                        ).astype(int)
+                        if k_x > (len(p_plus) - 1):  # out of domain p
+                            suma = np.nan
+                            if too_big_k is False:
+                                print(
+                                    f"for k>{k}: kx is out of p domain - "
+                                    + "if needs try bigger u_max or smaller k_max"
+                                )
+                            too_big_k = True
+                        else:
+                            if k_x >= b_p:
+                                suma = np.inf
+                            else:
+                                p_k_x = int(np.round(p_plus[k_x] / du, 10))
+                                if p_k_x > (len(Psi) - 1):  # out of domain Psi
+                                    suma = np.nan
+                                    if too_big_k is False:
+                                        print(
+                                            f"for k>{k}: p(kx) is out of Psi domain - "
+                                            + "if needs try bigger u_max or smaller k_max"
+                                        )
+                                    too_big_k = True
+                                else:
+                                    suma += Psi[p_k_x] * x[1, ind]
+                    array_alpha = np.append(array_alpha, suma - 1)
+                else:
+                    array_alpha = np.append(array_alpha, np.nan)
+                pbar.update(1)
+        # print(array_alpha)
+        return domain_k, array_alpha
+    elif p_norm == np.inf:
+        # t = np.arange(0, len(x) * dt, dt, dtype=np.float64)
+        domain_k = np.arange(k_min, k_max, dk)
+        array_alpha = np.array([])
+        too_big_k = False  # for print too big k only once
+        # with tqdm(total=len(domain_k), desc="counting of  k* and k**", disable=not show_progress) as pbar:
+        with tqdm(total=len(domain_k), desc=f"counting of  $\\alpha_{{p={p_norm},x}}(k)$",
+                  disable=not show_progress) as pbar:
+            for k in domain_k:
+                sum_phi = 0
+                sum_psi = 0
+                if too_big_k is False:
+                    # print('k=',k)
+                    for ind in range(len(x[1, :])):
+                        k_x = np.floor(  # albo round albo sufit
+                            k * x[0, ind] / du
+                        ).astype(int)
+                        if k_x > (len(p_plus) - 1):  # out of domain p
+                            sum_phi = np.nan
+                            sum_psi = np.nan
+                            if too_big_k is False:
+                                print(
+                                    f"for k>{k}: kx is out of p domain - "
+                                    + "if needs try bigger u_max or smaller k_max"
+                                )
+                            too_big_k = True
+                        else:
+                            if k_x >= b_p:
+                                sum_phi = np.inf
+                                sum_psi = np.inf
+                            else:
+                                sum_phi += Phi[k_x] * x[1, ind]
+                                p_k_x = int(np.round(p_plus[k_x] / du, 10))
+                                if p_k_x > (len(Psi) - 1):  # out of domain Psi
+                                    sum_psi = np.nan
+                                    if too_big_k is False:
+                                        print(
+                                            f"for k>{k}: p(kx) is out of Psi domain - "
+                                            + "if needs try bigger u_max or smaller k_max"
+                                        )
+                                    too_big_k = True
+                                else:
+                                    sum_psi += Psi[p_k_x] * x[1, ind]  # to trzeba przemyśleć, wcześniej było * dt
+                    array_alpha = np.append(array_alpha, -1 if sum_phi <= 1 else sum_psi)
+                else:
+                    array_alpha = np.append(array_alpha, np.nan)
+                pbar.update(1)
+        # print(array_alpha)
+        return domain_k, array_alpha
+
+    else:
+        # t = np.arange(0, len(x) * dt, dt, dtype=np.float64)
+        domain_k = np.arange(k_min, k_max, dk)
+        array_alpha = np.array([])
+        too_big_k = False  # for print too big k only once
+        # with tqdm(total=len(domain_k), desc="counting of  k* and k**", disable=not show_progress) as pbar:
+        with tqdm(total=len(domain_k), desc=f"counting of  $\\alpha_{{p={p_norm},x}}(k)$",
+                  disable=not show_progress) as pbar:
+            for k in domain_k:
+                sum_phi = 0  # osobno do iloczynu całek !!! a nie całki iloczynu !!!
+                sum_psi = 0
+                if too_big_k is False:
+                    # print('k=',k)
+                    for ind in range(len(x[1, :])):
+                        k_x = np.floor(  # albo round albo sufit
+                            k * x[0, ind] / du
+                        ).astype(int)
+                        if k_x > (len(p_plus) - 1):  # out of domain p
+                            sum_phi = np.nan
+                            sum_psi = np.nan
+                            if too_big_k is False:
+                                print(
+                                    f"for k>{k}: kx is out of p domain - "
+                                    + "if needs try bigger u_max or smaller k_max"
+                                )
+                            too_big_k = True
+                        else:
+                            if k_x >= b_p:
+                                sum_phi = np.inf
+                                sum_psi = np.inf
+                            else:
+                                p_k_x = int(np.round(p_plus[k_x] / du, 10))
+                                if p_k_x > (len(Psi) - 1):  # out of domain Psi
+                                    sum_phi = np.nan
+                                    sum_psi = np.nan
+                                    if too_big_k is False:
+                                        print(
+                                            f"for k>{k}: p(kx) is out of Psi domain - "
+                                            + "if needs try bigger u_max or smaller k_max"
+                                        )
+                                    too_big_k = True
+                                else:
+                                    sum_phi += (Phi[k_x] * x[1, ind])
+                                    sum_psi += (Psi[p_k_x] * x[1, ind])  # wcześniej było * dt
+                    array_alpha = np.append(array_alpha, sum_phi ** (p_norm - 1) * sum_psi - 1)
+                else:
+                    ''' out of domain : sum = np.nan'''
+                    array_alpha = np.append(array_alpha, np.nan)
+                pbar.update(1)
+        # print(array_alpha)
+        return domain_k, array_alpha
+
+
+def plot_alpha(
+        Orlicz_function,
+        du: float,
+        u_max: float,
+        x: np.ndarray,
+        # dt: float,
+        p_norm: float,
+        p_plus: np.ndarray = None,
+        Psi: np.ndarray = None,
+        k_min: float = 0.01,
+        k_max: float = 100,
+        dk: float = None,
+        len_domain_k: int = 1000,
+        show: bool = True,
+        save: bool = False,
+        show_progress: bool = False,
+        save_name: str = None,
+        title: str = None,
+        figsize: tuple = (5, 4),
+):
+    """
+    Plot kappa() function and (optionally) save the current figure in different formats (PNG, SVG, PDF) in plots folder.
+
+    Parameters
+    ----------
+    Orlicz_function : function
+        The Orlicz function to be used in form accepting decimal numbers
+    x : np.ndarray
+        A 2D numpy array representing x(t).
+    p_norm : float
+        The p-norm to be calculated.
+    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+         A 1D numpy array representing right side derivative p_{+}(u)
+    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+     A 1D numpy array representing right conjugate function Psi(u)
+    k_min : float, optional
+        The minimum value of the k domain in decimal form, by default 0.01.
+    k_max : float, optional
+        The maximum value of the k domain in decimal form, by default 10.
+    dk : float, optional
+        Step of k_domain, by default None
+        When given, more important than len_domain_k
+    len_domain_k : int, optional
+        The number of points in the k domain, by default 1000.
+    show_progress : bool, optional
+        Whether to show a progress bar during computation, by default False.
+    figsize : tuple, optional
+        Size of plots, by default (5, 4)
+    show : bool, optional
+        Whether to show plot, by default True.
+    save : bool, optional
+        Whether to save plot in pdf, png, svg formats in plots folder, by default False.
+    save_name : string, optional
+        Name for saved plots, by default 'kappa_{p_norm}.pdf'
+    title : string, optional
+        Title for plots, by default 'kappa_{p,x}(k)'
+
+    Note
+    ----
+    In this function there are no warnings about exceeding k^{*} and k^{**} ranges
+
+    Returns
+    -------
+    The function generates a figure and (optionally) save in folder 'plots' : None
+    """
+
+    domain_k, array_alpha = array_for_alpha(Orlicz_function, du, u_max, x, p_norm, p_plus, Psi, k_min, k_max, dk,
+                                            len_domain_k, show_progress)
+    fig, axes = plt.subplots(1, figsize=figsize)
+    if p_norm != np.inf:
+        axes.scatter([], [], facecolors="none",
+                     edgecolors="none",
+                     label="$p=" + str(p_norm) + "$",
+                     )
+    else:
+        axes.scatter([], [], facecolors="none",
+                     edgecolors="none",
+                     label="$p=\\infty$"
+                     )
+    b_array_alpha = 0
+    for b_array_alpha in range(len(array_alpha)):
+        if array_alpha[b_array_alpha] == np.inf:
+            break
+
+    if p_norm == 1:
+        opis = (
+            "$I_{\\Phi}^{p-1}(k\\,x)I_{\\Psi} (p_{+} (k\\, x))-1$"
+        )
+    elif p_norm == np.inf:
+        if mpl.rcParams["text.usetex"] is True:
+            opis = (r"$\left\{\begin{array}{ll}-1&,\ I_{\Phi}(k\, x) \leq 1 \\"
+                    r" I_{\Psi} (p_{+} (k\, x))&,\ I_{\Phi}(k\, x) > 1\end{array}\right.$"
+                    )
+        else:
+            opis = r"$I_{\Psi} (p_{+} (k\, x))$ if $I_{\Phi}(k\, x)) >1 $  else $-1$"
+    else:
+        opis = (
+                "$I_{\\Phi}^{p-1}(k\\, x)"
+                + "(I_{\\Psi}(p_{+}(k\\, x)))$"
+        )
+    # print(array_alpha)
+
+    if b_array_alpha < len(array_alpha) - 1:
+        axes.plot(
+            domain_k[:b_array_alpha],
+            array_alpha[:b_array_alpha],
+            label=opis,
+            linewidth=2,
+        )
+        axes.plot(
+            domain_k[b_array_alpha: len(domain_k)],
+            np.full(
+                (len(domain_k[b_array_alpha: len(domain_k)])),
+                max(
+                    1.2,
+                    1.3 * max(array_alpha[:b_array_alpha]),
+                ),
+            ),
+            "--",
+            label=opis + " $ = \\infty$",
+            linewidth=2,
+        )
+    else:
+        axes.plot(
+            domain_k,
+            array_alpha,
+            label=opis,
+            linewidth=2,
+        )
+    # zmniejszone do 0.001 bo niepracyzyjne obliczenia. Brak monotonicznosci alphy i bety
+    accuracy = max((np.max(array_alpha[np.isfinite(array_alpha)])
+                    - np.min(array_alpha[np.isfinite(array_alpha)])) * 0.001, 1e-15)
+    # accuracy = max((np.max(array_alpha) - np.min(array_alpha)) * 0.000001, 1e-15)
+    osiagane_minimum = np.where(
+        np.logical_and(
+            array_alpha < 1 + accuracy,
+            array_alpha > 1 - accuracy,
+            # array_alpha < 1 + 0.00001,
+            # array_alpha > 1 - 0.00001,
+        )
+    )
+
+    try:  # lepiej if len(array_alpha) > 0:
+        # k_star = domain_k[np.min(np.where(array_alpha > 1 - 0.00001)) - 1]
+        # k_star = domain_k[np.min(np.where(array_alpha > 1 - 0.00001))]
+        k_star = domain_k[np.min(np.where(array_alpha > - accuracy))]
+    except Exception as error:
+        print("An exception occurred:", error)
+        axes.scatter(
+            domain_k[-1],
+            array_alpha[-1],
+            s=40,
+            label="$k_{\\alpha, p}^{*}(x)> k\_max $",
+        )
+        # print(f'!!!{accuracy}')
+        # print(
+        #     f'!!! {np.max(array_alpha[np.isfinite(array_alpha)])}, {np.min(array_alpha[np.isfinite(array_alpha)])}')
+    else:
+        if (
+                # array_alpha[np.min(np.where(array_alpha > 1 - 0.00001)) - 1]
+                # array_alpha[np.min(np.where(array_alpha > 1 - 0.00001))]
+                array_alpha[np.min(np.where(array_alpha > - accuracy))]
+                == np.inf
+        ):
+            y = (
+                max(
+                    1.2,
+                    1.3 * max(array_alpha[:b_array_alpha]),
+                ),
+            )
+        else:
+            y = (
+                array_alpha[
+                    # np.min(np.where(array_alpha > 1 - 0.00001)) - 1
+                    # np.min(np.where(array_alpha > 1 - 0.00001))
+                    np.min(np.where(array_alpha > - accuracy))
+                ],
+            )
+        axes.scatter(
+            # domain_k[np.min(np.where(array_alpha > 1 - 0.00001)) - 1],
+            # domain_k[np.min(np.where(array_alpha > 1 - 0.00001))],
+            domain_k[np.min(np.where(array_alpha > - accuracy))],
+            y,
+            marker="*",
+            s=100,
+            label="$k_{\\alpha, p}^{*}(x)\\approx$" + str(round(k_star, 3)),
+        )
+        k_star_star = domain_k[
+            # np.max(np.where(array_alpha < 1 + 0.00001)) + 1
+            # np.max(np.where(array_alpha < 1 + 0.00001))
+            np.max(np.where(array_alpha < accuracy))
+        ]
+        axes.scatter(
+            # domain_k[np.max(np.where(array_alpha < 1 + 0.00001)) + 1],
+            # domain_k[np.max(np.where(array_alpha < 1 + 0.00001))],
+            domain_k[np.max(np.where(array_alpha < accuracy))],
+            # array_alpha[np.max(np.where(array_alpha < 1 + 0.00001)) + 1],
+            # array_alpha[np.max(np.where(array_alpha < 1 + 0.00001))],
+            array_alpha[np.max(np.where(array_alpha < accuracy))],
+            s=40,
+            label="$k_{\\alpha, p}^{**}(x)\\approx$" + str(round(k_star_star, 3)),
+        )
+
+    axes.axhline(
+        y=0,
+        linestyle="--",
+        linewidth=1.3,
+        label="0",
+    )
+
+    # axes.annotate("$k$", xy=(0.98, 0.02), xycoords="axes fraction")
+    # axes.annotate("$k$", xy=(1.03, -0.05), xycoords="axes fraction")
+    axes.set_xlabel("$k$")
+    axes.legend()
+    if title == None:
+        plt.title(r'$\alpha_{p,x}(k)$')
+    else:
+        plt.title(title)
+
+    # fig.suptitle(f"$p={p_norm}$")
+    fig.tight_layout()
+    if save is True:
+        if save_name is None:
+            plot_save(name='alpha', p_norm=p_norm)
+        else:
+            plot_save(save_name)
+
+    if show is True:
+        plt.show()
+    plt.close()
+    # fig.savefig(my_path + f"/plots/alpha_{p_norm}.png", dpi=1200)
+    # fig.savefig(my_path + f"/plots/alpha_{p_norm}.svg")
+    # fig.savefig(my_path + f"/plots/alpha_{p_norm}.pdf")
+
 
 if __name__ == "__main__":
     import doctest  # import the doctest library
