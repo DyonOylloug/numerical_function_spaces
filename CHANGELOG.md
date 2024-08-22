@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## v0.4.0 (2024-08-22)
+
+### Documentation
+
+* docs: add bibliography to index.md ([`8e3439e`](https://github.com/DyonOylloug/numerical_function_spaces/commit/8e3439e059abb282e1ec86e45ef5427cedcfa8b2))
+
+* docs: add definitions of kappa(), alpha() and tau() ([`9fd2bf0`](https://github.com/DyonOylloug/numerical_function_spaces/commit/9fd2bf02a9b67692f75d06729348cdeab37793d9))
+
+* docs: add installation instruction ([`7cba88e`](https://github.com/DyonOylloug/numerical_function_spaces/commit/7cba88e47be2570c342e897be1e995c395ff65ab))
+
+* docs: upgrade documentation ([`7d55654`](https://github.com/DyonOylloug/numerical_function_spaces/commit/7d556548f2fea4773404d30e7a96d5da8390420b))
+
+* docs: add documentation ([`181befd`](https://github.com/DyonOylloug/numerical_function_spaces/commit/181befd1bcda0e1733b17ee32f370b420db1334e))
+
+### Feature
+
+* feat: add plot_tau and array_for_tau functions with docs ([`ecd0adc`](https://github.com/DyonOylloug/numerical_function_spaces/commit/ecd0adc481a83de4e382e68d68af171a6a70f746))
+
+* feat: add array_for_alpha and plot_apha function with docs ([`35873a8`](https://github.com/DyonOylloug/numerical_function_spaces/commit/35873a8c2433622e2ab9b3b866de09aede12d642))
+
+### Performance
+
+* perf: change default plot_Phi size to (5,4) ([`0692ad0`](https://github.com/DyonOylloug/numerical_function_spaces/commit/0692ad0f4f6e3008faa9ceaf2e510badd3de3bd4))
+
+### Refactor
+
+* refactor: add sphinxcontrib.bibtex as dev.dependencies ([`6bed3e7`](https://github.com/DyonOylloug/numerical_function_spaces/commit/6bed3e7bae14246b567677b0b996dfc88a755d91))
+
 ## v0.3.0 (2024-08-18)
 
 ### Build
