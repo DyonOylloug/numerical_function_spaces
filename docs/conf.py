@@ -16,12 +16,11 @@ author = u"Adam Bohonos"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-#    'nbsphinx',
-#    'sphinx.ext.mathjax',
     "myst_nb",
     "autoapi.extension",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
+    "sphinxcontrib.bibtex"
 ]
 
 myst_enable_extensions = [
@@ -33,6 +32,10 @@ myst_enable_extensions = [
 ]
 
 autoapi_dirs = ["../src"]
+
+bibtex_bibfiles = [
+    "refs.bib"
+]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
