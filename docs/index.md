@@ -13,3 +13,9 @@ contributing.md
 conduct.md
 autoapi/index
 ```
+
+Bibliography
+------------
+
+```{bibliography}
+```
