@@ -514,7 +514,7 @@ def plot_Phi(
         u_max: float,
         du: float,
         max_u_on_plots: float,
-        figsize: tuple = (6, 5),
+        figsize: tuple = (5, 4),
         show: bool = True,
         save: bool = False,
 ):
@@ -551,7 +551,7 @@ def plot_Phi(
     for b_Phi in range(len(Phi)):
         if Phi[b_Phi] == np.inf:
             break
-    fig, axes = plt.subplots()
+    fig, axes = plt.subplots(figsize=figsize)
 
     if b_Phi < len(u) - 1:
         axes.plot(
