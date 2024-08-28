@@ -9,8 +9,9 @@ from numerical_function_spaces.orlicz_spaces import *
 # sys.path.append('./numerical_function_spaces')  # działa z testami w terminalu pycharm
 # from orlicz_spaces import *
 
-def p_Amemiya_norm_big_k():
-    """Check if else is used in function"""
+
+def test_p_Amemiya_norm_big_k():
+    # """Check if else is used in function."""
     x = np.array([[.1], [1]])
     assert np.isclose(p_Amemiya_norm(Orlicz_function_L_1, x=x, p_norm=1),
                       0.09999999999999999)
@@ -35,10 +36,6 @@ def test_norm_raise_ValueError():
     with pytest.raises(ValueError):
         kappa(Orlicz_function_L_1, x=x, k=1, p_norm=1)
 
-def test_p_Amemiya_norm_big_k():
-    x = np.array([[.1], [1]])
-    assert np.isclose(p_Amemiya_norm(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1),
-                      0.09999999)
 
 def test_Orlicz_norm_with_stars():
     x = np.array([[1], [2]])
@@ -47,12 +44,14 @@ def test_Orlicz_norm_with_stars():
                                 np.float64(1.0000083024999329),
                                 np.float64(1.0000083024999329)))
 
+
 def test_Luxemburg_norm_with_stars():
     x = np.array([[1], [2]])
     np.testing.assert_allclose(Luxemburg_norm_with_stars(Orlicz_function_L_1_sum_L_inf, x=x),
                                (np.float64(0.666712308582787),
                                 np.float64(1.4998973127189956),
                                 np.float64(1.4998973127189956)))
+
 
 def test_p_Amemiya_norm_with_stars():
     x = np.array([[1], [2]])
