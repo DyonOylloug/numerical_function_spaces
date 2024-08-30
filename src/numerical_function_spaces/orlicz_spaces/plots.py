@@ -358,7 +358,7 @@ def plot_Phi_p_plus_Psi(
         Orlicz_function,
         u_max: float,
         du: float,
-        max_u_on_plots: float,
+        max_u_on_plots: None,
         p_plus: np.ndarray = None,
         Psi: np.ndarray = None,
         figsize: tuple = (9, 3),
@@ -377,7 +377,7 @@ def plot_Phi_p_plus_Psi(
         Step of u_domain for Orlicz function
      u_max: float
          Right limit of u_domain for Orlicz function
-     max_u_on_plots: float
+     max_u_on_plots: float, by default None equal to u_max
          May be the same or smaller to u_max (bigger u_max may improve Psi accuracy)
      p_plus : np.ndarray, optional (if given must use the same u_max and du as given for plot)
          A 1D numpy array representing right side derivative p_{+}(u)
@@ -513,7 +513,6 @@ def plot_Phi(
         Orlicz_function,
         u_max: float,
         du: float,
-        max_u_on_plots: float,
         figsize: tuple = (5, 4),
         show: bool = True,
         save: bool = False,
@@ -530,8 +529,6 @@ def plot_Phi(
         Step of u_domain for Orlicz function
      u_max: float
          Right limit of u_domain for Orlicz function
-     max_u_on_plots: float
-         May be the same or smaller to u_max (bigger u_max may improve Psi accuracy)
      figsize : tuple, optional
          Size of plots, by default (5,4)
      show : bool, optional
@@ -561,10 +558,10 @@ def plot_Phi(
             linewidth=2,
         )
         axes.plot(
-            u[b_Phi: int(max_u_on_plots / du)],
+            u[b_Phi: int(u_max / du)],
             np.full(
-                (len(u[b_Phi: int(max_u_on_plots / du)])),
-                max(1, 2 * max(Phi[: int(b_Phi - 1)])),
+                (len(u[b_Phi: int(u_max / du)])),
+                max(1, 2.5 * max(Phi[: int(b_Phi - 1)])),
             ),
             "--",
             # "--",  # why this was double? 2024.08.22
@@ -573,8 +570,8 @@ def plot_Phi(
         )
     else:
         axes.plot(
-            u[: int(max_u_on_plots / du)],
-            Phi[: int(max_u_on_plots / du)],
+            u[: int(u_max / du)],
+            Phi[: int(u_max / du)],
             label="$\\Phi(u)$",
             linewidth=2,
         )
