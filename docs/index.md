@@ -5,8 +5,9 @@
 :maxdepth: 1
 :hidden:
 
+Orlicz_functions.ipynb
+conjugate_plots_Phi_p_Psi.ipynb
 norms.ipynb
-conjugate_plots_Phi_p_Psi
 plots.ipynb
 changelog.md
 contributing.md
