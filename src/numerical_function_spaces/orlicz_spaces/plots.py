@@ -358,7 +358,7 @@ def plot_Phi_p_plus_Psi(
         Orlicz_function,
         u_max: float,
         du: float,
-        max_u_on_plots: None,
+        max_u_on_plots: float,
         p_plus: np.ndarray = None,
         Psi: np.ndarray = None,
         figsize: tuple = (9, 3),
@@ -376,9 +376,9 @@ def plot_Phi_p_plus_Psi(
      du : float
         Step of u_domain for Orlicz function
      u_max: float
-         Right limit of u_domain for Orlicz function
-     max_u_on_plots: float, by default None equal to u_max
-         May be the same or smaller to u_max (bigger u_max may improve Psi accuracy)
+         Right limit of u_domain for Orlicz function (bigger u_max may improve Psi accuracy)
+     max_u_on_plots: float
+         May be the same or smaller to u_max
      p_plus : np.ndarray, optional (if given must use the same u_max and du as given for plot)
          A 1D numpy array representing right side derivative p_{+}(u)
      Psi : np.ndarray, optional (if given must use the same u_max and du as given for plot)
@@ -429,7 +429,7 @@ def plot_Phi_p_plus_Psi(
             u[b_Phi: int(max_u_on_plots / du)],
             np.full(
                 (len(u[b_Phi: int(max_u_on_plots / du)])),
-                max(1, 2 * max(Phi[: int(b_Phi - 1)])),
+                max(1, 2.5 * max(Phi[: int(b_Phi - 1)])),
             ),
             "--",
             label="$\\Phi(u) = \\infty$",
@@ -445,7 +445,7 @@ def plot_Phi_p_plus_Psi(
             u[b_Phi: int(max_u_on_plots / du)],
             np.full(
                 (len(u[b_Phi: int(max_u_on_plots / du)])),
-                max(1, 2 * max(p_plus[: int(b_Phi - 1)])),
+                max(1, 2.5 * max(p_plus[: int(b_Phi - 1)])),
             ),
             "--",
             label="$p_{+}(u) = \\infty$",
@@ -481,7 +481,7 @@ def plot_Phi_p_plus_Psi(
             u[b_Psi: int(max_u_on_plots / du)],
             np.full(
                 (len(u[b_Psi: int(max_u_on_plots / du)])),
-                max(1, 2 * max(Psi[: int(b_Psi - 1)])),
+                max(1, 2.5 * max(Psi[: int(b_Psi - 1)])),
             ),
             "--",
             label="$\\Psi(u) = \\infty$",
