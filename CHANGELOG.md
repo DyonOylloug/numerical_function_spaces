@@ -1,5 +1,73 @@
 # CHANGELOG
 
+## Unreleased
+
+### Documentation
+
+* docs: add mybinder link ([`65a5faa`](https://github.com/DyonOylloug/numerical_function_spaces/commit/65a5faa1c68e5d5b5d7816791fb17be8ff45975c))
+
+### Refactor
+
+* refactor: manually up version ([`44f591a`](https://github.com/DyonOylloug/numerical_function_spaces/commit/44f591afa75f34a206485fe675387fa3c73e9e78))
+
+## v0.4.1 (2024-08-31)
+
+### Documentation
+
+* docs: more examples ([`1894a2b`](https://github.com/DyonOylloug/numerical_function_spaces/commit/1894a2b79e2fe41ef3bb8f4658da2cd51a4a5a26))
+
+* docs: move sections ([`6197d49`](https://github.com/DyonOylloug/numerical_function_spaces/commit/6197d49453dceaff21200a5de2e09d0b9b616267))
+
+* docs: move Orlicz function examples to a separate file ([`9004aa6`](https://github.com/DyonOylloug/numerical_function_spaces/commit/9004aa6849ba7533bbc1b5c1a223477be92e387e))
+
+* docs: add more examples ([`6b5bf23`](https://github.com/DyonOylloug/numerical_function_spaces/commit/6b5bf231c8a86f245e15d1729b8128af3e8ac108))
+
+* docs: remove max_u_on_plots in plot_Phi ([`bb924b3`](https://github.com/DyonOylloug/numerical_function_spaces/commit/bb924b3a2ec08c67cb8089f78a932fb63209a85e))
+
+* docs: change plot description of x_4(t) ([`28a60e7`](https://github.com/DyonOylloug/numerical_function_spaces/commit/28a60e7f6b38721d4b424f1468081a5b0434042b))
+
+* docs: change plots for defined x(t) ([`a2379b7`](https://github.com/DyonOylloug/numerical_function_spaces/commit/a2379b7cfda79c3d64bbea21f247f63303b02530))
+
+* docs: add plots for defined x(t) ([`469680f`](https://github.com/DyonOylloug/numerical_function_spaces/commit/469680f1da9c29b0f64cfac736e2b6f190936331))
+
+* docs: move import decimal from first cell ([`4f46369`](https://github.com/DyonOylloug/numerical_function_spaces/commit/4f46369f2320c2292eb824eaf4d4be152e5d8cc1))
+
+### Fix
+
+* fix: add comma ([`93e37a0`](https://github.com/DyonOylloug/numerical_function_spaces/commit/93e37a09a02a88751290fcaf531c516962dbab79))
+
+* fix: move exclude block ([`eb3506e`](https://github.com/DyonOylloug/numerical_function_spaces/commit/eb3506ef2758f8bb4f0bdc2c81ba5931757b3858))
+
+### Performance
+
+* perf: change infinity position in plot_Phi_p_plus_Psi ([`357b679`](https://github.com/DyonOylloug/numerical_function_spaces/commit/357b679df7128a886f1694e29143508a84ba7500))
+
+* perf: remove max_u_on_plots and change infty position in plot_Phi ([`cfbab32`](https://github.com/DyonOylloug/numerical_function_spaces/commit/cfbab328c767330d7f023a0f26eb554143abde31))
+
+### Refactor
+
+* refactor: remove requirements.txt and runtime.txt from build ([`9550c5c`](https://github.com/DyonOylloug/numerical_function_spaces/commit/9550c5c54e0eaba7c4748a954f18093d631c03a7))
+
+* refactor: add numerical_function_spaces as dependency - for binder ([`95fb6a8`](https://github.com/DyonOylloug/numerical_function_spaces/commit/95fb6a89bf9adafa60fabcd29141477133302e67))
+
+* refactor: add numerical-function-spaces as dependency - for binder ([`207ba81`](https://github.com/DyonOylloug/numerical_function_spaces/commit/207ba81b53e0d6dc6a94d992b172385653b369f6))
+
+* refactor: remove python version ([`15721d5`](https://github.com/DyonOylloug/numerical_function_spaces/commit/15721d5c81a7c2c28de711c0fb0558b4682602f3))
+
+* refactor: add requirements.txt for mybinder.org ([`a3512f2`](https://github.com/DyonOylloug/numerical_function_spaces/commit/a3512f2693fbfc43fe2df39301e87624415e1e39))
+
+### Test
+
+* test: add conjugate tests and p_plus test ([`7f8fb0e`](https://github.com/DyonOylloug/numerical_function_spaces/commit/7f8fb0e51f66786ab639de7f3a884dd8483a6224))
+
+* test: remove doubled test ([`c683535`](https://github.com/DyonOylloug/numerical_function_spaces/commit/c6835358de4a442f2ee59a151e68d2171774bd51))
+
+* test: add some test for norms ([`46eb4e0`](https://github.com/DyonOylloug/numerical_function_spaces/commit/46eb4e0b29cd9072620ed6e75d0ffee72f1a323f))
+
+### Unknown
+
+* python version for binder ([`f6810e5`](https://github.com/DyonOylloug/numerical_function_spaces/commit/f6810e5d1b16262b7bfe67464e63726c6304ed98))
+
 ## v0.4.0 (2024-08-22)
 
 ### Documentation
