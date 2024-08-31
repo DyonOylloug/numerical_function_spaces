@@ -7,8 +7,8 @@ license = "MIT"
 readme = "README.md"
 
 exclude = [
-    "requirements.txt"
-    "runtime.txt"
+    "requirements.txt",
+    "runtime.txt",
 ]
 
 [tool.poetry.dependencies]
