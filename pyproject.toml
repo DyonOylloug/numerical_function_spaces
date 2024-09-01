@@ -9,6 +9,7 @@ readme = "README.md"
 exclude = [
     "requirements.txt",
     "runtime.txt",
+    "apt.txt"
 ]
 
 [tool.poetry.dependencies]
