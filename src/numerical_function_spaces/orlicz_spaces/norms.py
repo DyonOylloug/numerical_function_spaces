@@ -87,6 +87,11 @@ def p_Amemiya_norm(
    >>> p_Amemiya_norm(Orlicz_function, x=x, p_norm=1)
    np.float64(1.0)
    """
+    if any(x[1, :] <= 0):
+        raise ValueError("wrong definition of x(t): x[1, :] must be positive")
+    x = abs(x)
+    if np.max(x[0, :]) == 0:
+        return 0, np.nan, np.nan
     val_k = np.empty([2, 5])  # domain and values kappa - for looking minimum
     val_k[:] = None
     val_k[1, 0] = 1
@@ -377,7 +382,7 @@ def p_Amemiya_norm_with_stars(
     if any(x[1, :] <= 0):
         raise ValueError("wrong definition of x(t): x[1, :] must be positive")
     x = abs(x)
-    if np.max(x) == 0:
+    if np.max(x[0, :]) == 0:
         return 0, np.nan, np.nan
     # k_min = 0.000001
     # k_max = 100
