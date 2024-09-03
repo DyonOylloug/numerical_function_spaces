@@ -30,11 +30,59 @@ def test_p_Amemiya_norm():
     assert np.isclose(p_Amemiya_norm(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1), 2)
 
 
-def test_norm_raise_ValueError():
+def test_kappa_raise_ValueError():
     """Check ValueError."""
     x = np.array([[1], [-1]])
     with pytest.raises(ValueError):
         kappa(Orlicz_function_L_1, x=x, k=1, p_norm=1)
+
+
+def test_norm_raise_ValueError():
+    """Check ValueError."""
+    x = np.array([[1], [-1]])
+    with pytest.raises(ValueError):
+        p_Amemiya_norm(Orlicz_function_L_1, x=x, p_norm=1)
+
+
+def test_norm_with_stars_raise_ValueError():
+    """Check ValueError."""
+    x = np.array([[dc.Decimal(1)], [dc.Decimal(-1)]])
+    with pytest.raises(ValueError):
+        p_Amemiya_norm_with_stars(Orlicz_function_L_1, x=x, p_norm=1)
+
+
+def test_norm_decimal_raise_ValueError():
+    """Check ValueError."""
+    x = np.array([[dc.Decimal(1)], [dc.Decimal(-1)]])
+    with pytest.raises(ValueError):
+        p_Amemiya_norm_with_stars_by_decimal(Orlicz_function_L_1, x=x, p_norm=1)
+
+
+def test_norm_zeros():
+    x = np.array([[0], [2]])
+    assert (
+            p_Amemiya_norm(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1)[0] == 0
+            and np.isnan(p_Amemiya_norm(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1)[1])
+            and np.isnan(p_Amemiya_norm(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1)[2])
+    )
+
+
+def test_norm_with_stars_zeros():
+    x = np.array([[0], [2]])
+    assert (
+            p_Amemiya_norm_with_stars(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1)[0] == 0
+            and np.isnan(p_Amemiya_norm_with_stars(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1)[1])
+            and np.isnan(p_Amemiya_norm_with_stars(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1)[2])
+    )
+
+
+def test_norm_with_stars_by_decimal_zeros():
+    x = np.array([[dc.Decimal(0)], [dc.Decimal(2)]])
+    assert (
+            p_Amemiya_norm_with_stars_by_decimal(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1)[0] == 0
+            and np.isnan(p_Amemiya_norm_with_stars_by_decimal(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1)[1])
+            and np.isnan(p_Amemiya_norm_with_stars_by_decimal(Orlicz_function_L_1_sum_L_inf, x=x, p_norm=1)[2])
+    )
 
 
 def test_Orlicz_norm_with_stars():

@@ -620,6 +620,9 @@ def p_Amemiya_norm_with_stars_by_decimal(
     if any(x[1, :] <= 0):
         raise ValueError("wrong definition of x(t): x[1, :] must be positive")
     x = abs(x)
+    if np.max(x[0, :]) == 0:
+        return 0, np.nan, np.nan
+
     if dk is None:  # if user specifies len_domain_k
         dk = (k_max - k_min) / len_domain_k
     else:
