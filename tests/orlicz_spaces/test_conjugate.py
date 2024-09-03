@@ -28,3 +28,17 @@ def test_conjugate_log():
     np.testing.assert_allclose(conjugate_function(Orlicz_function, u_max=5, du=0.5),
                                np.array([0., 0., 0.21639532, 0.57944154, 1.29583687,
                                          2.87527841, inf, inf, inf, inf]))
+
+def test_right_side_L_inf():
+    def Orlicz_function(u):
+        return np.where(u <= 1, 0, np.inf)
+
+    np.testing.assert_allclose(right_side_derivative(Orlicz_function, u_max=5, du=0.5),
+                               np.array([ 0.,  0., inf, inf, inf, inf, inf, inf, inf, inf]))
+
+def test_confjugate_log_long():
+    def Orlicz_function(u):
+        return  u * np.log(u + 2) - np.log(u + 1)
+
+    np.testing.assert_allclose(conjugate_function(Orlicz_function, u_max=20, du=0.2)[[0, 72, 73, -1]],
+                               np.array([2.46300847e-02, 6.60014625e+05,            inf,            inf]))
