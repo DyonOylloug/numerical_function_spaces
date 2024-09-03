@@ -107,3 +107,90 @@ def test_p_Amemiya_norm_with_stars():
                                (np.float64(2.000000007378271),
                                 np.float64(0.7071497309222621),
                                 np.float64(0.7071497309222621)))
+
+
+def test_norm_with_dk():
+    x = np.array([[1], [1]])
+    np.testing.assert_allclose(p_Amemiya_norm_with_stars(Orlicz_function_L_1_cap_L_inf,
+                                                         x=x,
+                                                         p_norm=1,
+                                                         dk=0.1),
+                               (np.float64(2.0001109956018714),
+                                np.float64(0.9998890167167849),
+                                np.float64(0.9998890167167849)))
+
+
+def test_norm_by_decimal_with_dk():
+    x = np.array([[dc.Decimal(1)], [dc.Decimal(1)]])
+    assert p_Amemiya_norm_with_stars_by_decimal(Orlicz_function_u_2,
+                                                x=x,
+                                                p_norm=dc.Decimal(1),
+                                                dk=dc.Decimal('0.1')) == (dc.Decimal('2.000000000099999000009999900'),
+                                                                          dc.Decimal('1.00001'),
+                                                                          dc.Decimal('1.00001'))
+
+
+def test_norm_by_decimal_inf():
+    x = np.array([[dc.Decimal(1)], [dc.Decimal(1)]])
+    assert p_Amemiya_norm_with_stars_by_decimal(Orlicz_function_u_2,
+                                                x=x,
+                                                p_norm=dc.Decimal(np.inf)) == (
+               dc.Decimal('1.000009900000000000000000000'),
+               dc.Decimal('1.00000990'),
+               dc.Decimal('1.00000990'))
+
+
+def test_norm_by_decimal_2():
+    x = np.array([[dc.Decimal(1)], [dc.Decimal(1)]])
+    assert p_Amemiya_norm_with_stars_by_decimal(Orlicz_function_u_2,
+                                                x=x,
+                                                p_norm=dc.Decimal(2)) == (dc.Decimal('1.414213562511700747850059004'),
+                                                                          dc.Decimal('1.00000990'),
+                                                                          dc.Decimal('1.00000990'))
+
+
+def test_norm_extend_domain_k():
+    x = np.array([[1], [1]])
+    np.testing.assert_allclose(p_Amemiya_norm_with_stars(Orlicz_function_L_inf,
+                                                         x=0.001 * x,
+                                                         p_norm=1),
+                               (np.float64(0.0010000192259169113),
+                                np.float64(999.9807744527175),
+                                np.float64(999.9807744527175)))
+
+
+def test_norm_k_star_out_of_domain():
+    def Orlicz_function(u):
+        Phi = np.zeros(len(u))
+        for i in range(len(u)):
+            if u[i] <= 1:
+                Phi[i] = u[i] ** 2
+            elif u[i] <= 2:
+                Phi[i] = 2 * u[i] - 1
+            else:
+                Phi[i] = (u[i] - 1) ** 2 + 2
+        return Phi
+
+    x = np.array([[1], [1]])
+    np.testing.assert_allclose(p_Amemiya_norm_with_stars(Orlicz_function,
+                                                         x=x,
+                                                         p_norm=1,
+                                                         k_min=1.1,
+                                                         k_max=1.9),
+                               (np.float64(1.9999999999999998),
+                                np.float64(1.1),
+                                np.float64(1.899199999999912)))
+
+
+def test_norm_k_star_by_decimal_out_of_domain():
+    def Orlicz_function(u):
+        return np.where(u <= 1, u ** 2, np.where(u <= 2, 2 * u - 1, (u - 1) ** 2 + 2))
+
+    x = np.array([[1], [1]])
+    assert p_Amemiya_norm_with_stars_by_decimal(Orlicz_function,
+                                                x=x,
+                                                p_norm=dc.Decimal(1),
+                                                k_min=dc.Decimal('1.1'),
+                                                k_max=dc.Decimal('1.9')
+                                                ) == (
+           dc.Decimal('2.000000000000000000000000000'), dc.Decimal('1.1'), dc.Decimal('1.8992'))
