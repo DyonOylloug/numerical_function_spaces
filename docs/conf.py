@@ -31,7 +31,13 @@ myst_enable_extensions = [
     "html_image",
 ]
 
-nb_execution_excludepatterns = ['sequences.ipynb']
+nb_execution_excludepatterns = [
+        "animations.ipynb",
+        "norms.ipynb",
+        "Orlicz_functions.ipynb",
+        "plots.ipynb",
+        "sequences.ipynb",
+]
 
 nb_execution_mode = "cache"
 
