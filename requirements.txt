@@ -5,7 +5,7 @@ fonttools==4.53.1
 kiwisolver==1.4.5
 matplotlib==3.9.2
 numpy==2.0.1
-numerical_function_spaces>=0.4.1
+numerical_function_spaces>=0.5.0
 packaging==24.1
 pillow==10.4.0
 pyparsing==3.1.2
