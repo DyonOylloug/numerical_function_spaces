@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "numerical_function_spaces"
-version = "0.4.1"
+version = "0.5.0"
 description = "An attempt to numerically study the geometry of the Orlicz function spaces"
 authors = ["Adam Bohonos"]
 license = "MIT"

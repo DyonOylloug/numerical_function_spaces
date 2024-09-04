@@ -1,14 +1,58 @@
 # CHANGELOG
 
-## Unreleased
+## v0.5.0 (2024-09-04)
 
 ### Documentation
 
+* docs: actualization after changing plots functions ([`3b4aa8f`](https://github.com/DyonOylloug/numerical_function_spaces/commit/3b4aa8f0b9b589e90480a69d0c1c3e2070940989))
+
+* docs: add docstring to plot_p_norms ([`9f4fa9e`](https://github.com/DyonOylloug/numerical_function_spaces/commit/9f4fa9efaa093a7dc059e3648b7ebadc515f9f06))
+
+* docs: new pycharm tested for results ([`598f3ef`](https://github.com/DyonOylloug/numerical_function_spaces/commit/598f3ef75f4b999e469fb1a0bcb194766df0e2a7))
+
+* docs: add __version__ in __init__.py ([`bd3c4f1`](https://github.com/DyonOylloug/numerical_function_spaces/commit/bd3c4f10a10be320fb289c92c021b3a0f0f18fd5))
+
+* docs: add sequances examples ([`35c57e5`](https://github.com/DyonOylloug/numerical_function_spaces/commit/35c57e5ac2dc4dda580ecffbf347a0ad4781399d))
+
+* docs: 0.4.1 ([`0cd7384`](https://github.com/DyonOylloug/numerical_function_spaces/commit/0cd73844dbbfb4cbf789c7600e26adc4ad00024c))
+
 * docs: add mybinder link ([`65a5faa`](https://github.com/DyonOylloug/numerical_function_spaces/commit/65a5faa1c68e5d5b5d7816791fb17be8ff45975c))
+
+### Feature
+
+* feat: add link to binder - interactive notebook session ([`3e1fd02`](https://github.com/DyonOylloug/numerical_function_spaces/commit/3e1fd02d54614c43cffb0ec4d9560636e0fa7323))
+
+### Fix
+
+* fix: wrong package name ([`f7f27dd`](https://github.com/DyonOylloug/numerical_function_spaces/commit/f7f27dd9b517477765f0e2b02b0348750e17dc93))
+
+### Performance
+
+* perf: actualizations of packages ([`3ee5763`](https://github.com/DyonOylloug/numerical_function_spaces/commit/3ee57631cd0fbbe30053af77cf13997620ad19c4))
+
+* perf: plot function return figure and default not showing plot ([`f8c8f7e`](https://github.com/DyonOylloug/numerical_function_spaces/commit/f8c8f7eabb2d93e9453cb9d00191aad3ff796fe6))
+
+* perf: install latex in mybinder ([`50acac1`](https://github.com/DyonOylloug/numerical_function_spaces/commit/50acac140f86dc175257c680bef117360f16cf8a))
+
+* perf: change tag to commit to automatic change version ([`5f6b035`](https://github.com/DyonOylloug/numerical_function_spaces/commit/5f6b03536b41fdb790ed9ab2664bdb0302a0926a))
 
 ### Refactor
 
+* refactor: check if x is proper in norms ([`3cc66de`](https://github.com/DyonOylloug/numerical_function_spaces/commit/3cc66de72d416b5c2c072805926c008235ef360d))
+
+* refactor: change res to Phi in definitions ([`c6699de`](https://github.com/DyonOylloug/numerical_function_spaces/commit/c6699dec50011156f1b3ee9d701a87f98d8e03e5))
+
+* refactor: up numerical_function_spaces version - for binder ([`546d6d5`](https://github.com/DyonOylloug/numerical_function_spaces/commit/546d6d53d9f4a08b83243dc2787cf187a0ca1ada))
+
 * refactor: manually up version ([`44f591a`](https://github.com/DyonOylloug/numerical_function_spaces/commit/44f591afa75f34a206485fe675387fa3c73e9e78))
+
+### Test
+
+* test: add more tests ([`24db919`](https://github.com/DyonOylloug/numerical_function_spaces/commit/24db9193d1328dc3cd708046f5e3409b95d2461d))
+
+* test: check if x is zero ([`1e666dd`](https://github.com/DyonOylloug/numerical_function_spaces/commit/1e666ddf523a5836b0e2df196e43a59c90851d7d))
+
+* test: log function ([`bb82dfc`](https://github.com/DyonOylloug/numerical_function_spaces/commit/bb82dfc83642252c799d3db412493325f81727b4))
 
 ## v0.4.1 (2024-08-31)
 
