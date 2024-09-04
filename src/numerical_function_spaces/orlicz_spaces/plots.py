@@ -94,9 +94,38 @@ def plot_p_norms(Orlicz_function,
                  attach_inf=False,
                  show_progress=False,
                  figsize: tuple = (5, 4),
-                 show: bool = True,
+                 show: bool = False,
                  save: bool = False,
                  ):
+    """
+    Plot the p-norms of a given signal x for a range of p values.
+
+    Parameters
+    ----------
+    Orlicz_function : function
+        The Orlicz function to be used in form accepting decimal numbers
+    x : np.ndarray
+        A 2D numpy array representing x(t).
+    p_min: float greater or equal 1
+        The minimum value of the p domain. Default is 1.
+    p_max: float smaller than infinity
+        The maximum value of the p domain. Default is 50.
+    dp: positive float
+        The step of the p domain. Default is 2.
+    attach_inf: bool
+        Whether to attach infinity norm to the plot. Default is False.
+    show_progress: bool
+        Whether to show a progress bar during computation. Default is False.
+    figsize: tuple
+        The size of the plot. Default is (5, 4).
+    show: bool
+        Whether to show the plot. Default is False.
+    save: bool
+        Whether to save the plot in different formats (PNG, SVG, PDF) in the 'plots' folder. Default is False.
+
+    Returns:
+    - Matplotlib figure. The function generates a plot and optionally saves it.
+    """
     norms = []
     for ind in tqdm(np.arange(p_min, p_max, dp), disable=not show_progress):
         # norms.append(p_Amemiya_norm_with_stars(Orlicz_function, x, dt, p_norm=ind)[0])
@@ -130,7 +159,7 @@ def plot_p_norms(Orlicz_function,
     # fig.savefig(my_path + "/plots/p_norms.png", dpi=1200)
     # fig.savefig(my_path + "/plots/p_norms.svg")
     # fig.savefig(my_path + "/plots/p_norms.pdf")
-
+    return fig
 
 def plot_kappa(
         Orlicz_function,
