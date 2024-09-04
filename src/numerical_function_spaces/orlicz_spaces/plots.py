@@ -123,8 +123,9 @@ def plot_p_norms(Orlicz_function,
     save: bool
         Whether to save the plot in different formats (PNG, SVG, PDF) in the 'plots' folder. Default is False.
 
-    Returns:
-    - Matplotlib figure. The function generates a plot and optionally saves it.
+    Returns
+    -------
+    The function generates a figure and (optionally) save in folder 'plots' : Matplotlib figure
     """
     norms = []
     for ind in tqdm(np.arange(p_min, p_max, dp), disable=not show_progress):
@@ -171,7 +172,7 @@ def plot_kappa(
         len_domain_k: int = 1000,
         show_progress: bool = False,
         figsize: tuple = (5, 4),
-        show: bool = True,
+        show: bool = False,
         save: bool = False,
         save_name: str = None,
         title: str = None
@@ -199,7 +200,7 @@ def plot_kappa(
     figsize : tuple, optional
         Size of plots, by default (5,4)
     show : bool, optional
-        Whether to show plot, by default True.
+        Whether to show plot, by default False.
     save : bool, optional
         Whether to save plot in pdf, png, svg formats in plots folder, by default False.
     save_name : string, optional
@@ -209,7 +210,7 @@ def plot_kappa(
 
     Returns
     -------
-    The function generates a figure and (optionally) save in folder 'plots' : None
+    The function generates a figure and (optionally) save in folder 'plots' : Matplotlib figure
     """
 
     if dk is None:  # if user does not specify dk
@@ -381,7 +382,7 @@ def plot_kappa(
     # fig.savefig(my_path + f"/plots/kappa_{p_norm}.png", dpi=1200)
     # fig.savefig(my_path + f"/plots/kappa_{p_norm}.svg")
     # fig.savefig(my_path + f"/plots/kappa_{p_norm}.pdf")
-
+    return fig
 
 def plot_Phi_p_plus_Psi(
         Orlicz_function,
@@ -391,7 +392,7 @@ def plot_Phi_p_plus_Psi(
         p_plus: np.ndarray = None,
         Psi: np.ndarray = None,
         figsize: tuple = (9, 3),
-        show: bool = True,
+        show: bool = False,
         save: bool = False,
 ):
     """
@@ -415,13 +416,13 @@ def plot_Phi_p_plus_Psi(
      figsize : tuple, optional
          Size of plots, by default (5,4)
      show : bool, optional
-         Whether to show plot, by default True.
+         Whether to show plot, by default False.
      save : bool, optional
          Whether to save plot in pdf, png, svg formats in plots folder, by default False.
 
      Returns
      -------
-     The function generates a figure and (optionally) save in folder 'plots' : None
+     The function generates a figure and (optionally) save in folder 'plots' : Matplotlib figure
      """
     u = np.arange(0, u_max, du, dtype=np.float64)  # domain of u
 
@@ -536,14 +537,14 @@ def plot_Phi_p_plus_Psi(
     # fig.savefig(my_path + "/plots/Phi_Psi_pp.png", dpi=1200)
     # fig.savefig(my_path + "/plots/Phi_Psi_pp.svg")
     # fig.savefig(my_path + "/plots/Phi_Psi_pp.pdf")
-
+    return fig
 
 def plot_Phi(
         Orlicz_function,
         u_max: float,
         du: float,
         figsize: tuple = (5, 4),
-        show: bool = True,
+        show: bool = False,
         save: bool = False,
 ):
     """
@@ -561,13 +562,13 @@ def plot_Phi(
      figsize : tuple, optional
          Size of plots, by default (5,4)
      show : bool, optional
-         Whether to show plot, by default True.
+         Whether to show plot, by default False.
      save : bool, optional
          Whether to save plot in pdf, png, svg formats in plots folder, by default False.
 
      Returns
      -------
-     The function generates a figure and (optionally) save in folder 'plots' : None
+     The function generates a figure and (optionally) save in folder 'plots' : Matplotlib figure
      """
     u = np.arange(0, u_max, du, dtype=np.float64)  # domain of u
 
@@ -613,6 +614,7 @@ def plot_Phi(
     if show is True:
         plt.show()
     plt.close()
+    return fig
 
 
 def array_for_alpha(
@@ -645,9 +647,9 @@ def array_for_alpha(
         A 2D numpy array representing x(t).
     p_norm : float
         The p-norm to be calculated.
-    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default None
          A 1D numpy array representing right side derivative p_{+}(u)
-    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default None
          A 1D numpy array representing right conjugate function Psi(u)
     k_min : float, optional
         The minimum value of the k domain in decimal form, by default 0.01.
@@ -848,7 +850,7 @@ def plot_alpha(
         k_max: float = 100,
         dk: float = None,
         len_domain_k: int = 1000,
-        show: bool = True,
+        show: bool = False,
         save: bool = False,
         show_progress: bool = False,
         save_name: str = None,
@@ -870,9 +872,9 @@ def plot_alpha(
         A 2D numpy array representing x(t).
     p_norm : float
         The p-norm to be calculated.
-    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default None
          A 1D numpy array representing right side derivative p_{+}(u)
-    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default None
      A 1D numpy array representing right conjugate function Psi(u)
     k_min : float, optional
         The minimum value of the k domain in decimal form, by default 0.01.
@@ -888,7 +890,7 @@ def plot_alpha(
     figsize : tuple, optional
         Size of plots, by default (5, 4)
     show : bool, optional
-        Whether to show plot, by default True.
+        Whether to show plot, by default False.
     save : bool, optional
         Whether to save plot in pdf, png, svg formats in plots folder, by default False.
     save_name : string, optional
@@ -902,7 +904,7 @@ def plot_alpha(
 
     Returns
     -------
-    The function generates a figure and (optionally) save in folder 'plots' : None
+    The function generates a figure and (optionally) save in folder 'plots' : Matplotlib figure
     """
 
     domain_k, array_alpha = array_for_alpha(Orlicz_function, du, u_max, x, p_norm, p_plus, Psi, k_min, k_max, dk,
@@ -1075,6 +1077,7 @@ def plot_alpha(
     # fig.savefig(my_path + f"/plots/alpha_{p_norm}.png", dpi=1200)
     # fig.savefig(my_path + f"/plots/alpha_{p_norm}.svg")
     # fig.savefig(my_path + f"/plots/alpha_{p_norm}.pdf")
+    return fig
 
 def array_for_tau(
         Orlicz_function,
@@ -1106,9 +1109,9 @@ def array_for_tau(
         A 2D numpy array representing x(t).
     p_norm : float
         The p-norm to be calculated.
-    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default None
          A 1D numpy array representing right side derivative p_{+}(u)
-    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default None
          A 1D numpy array representing right conjugate function Psi(u)
     k_min : float, optional
         The minimum value of the k domain in decimal form, by default 0.01.
@@ -1297,7 +1300,7 @@ def plot_tau(
         k_max: float = 100,
         dk: float = None,
         len_domain_k: int = 1000,
-        show: bool = True,
+        show: bool = False,
         save: bool = False,
         show_progress: bool = False,
         save_name: str = None,
@@ -1319,9 +1322,9 @@ def plot_tau(
         A 2D numpy array representing x(t).
     p_norm : float
         The p-norm to be calculated.
-    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+    p_plus : np.ndarray, optional (must use the same u_max and du as given for plot), by default None
          A 1D numpy array representing right side derivative p_{+}(u)
-    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default is None
+    Psi : np.ndarray, optional (must use the same u_max and du as given for plot), by default None
      A 1D numpy array representing right conjugate function Psi(u)
     k_min : float, optional
         The minimum value of the k domain in decimal form, by default 0.01.
@@ -1337,7 +1340,7 @@ def plot_tau(
     figsize : tuple, optional
         Size of plots, by default (5, 4)
     show : bool, optional
-        Whether to show plot, by default True.
+        Whether to show plot, by default False.
     save : bool, optional
         Whether to save plot in pdf, png, svg formats in plots folder, by default False.
     save_name : string, optional
@@ -1351,7 +1354,7 @@ def plot_tau(
 
     Returns
     -------
-    The function generates a figure and (optionally) save in folder 'plots' : None
+    The function generates a figure and (optionally) save in folder 'plots' : Matplotlib figure
     """
     domain_k, array_k_star = array_for_tau(Orlicz_function, du, u_max, x, p_norm, p_plus, Psi, k_min, k_max, dk,
                                             len_domain_k, show_progress)
@@ -1518,6 +1521,7 @@ def plot_tau(
     # fig.savefig(my_path + f"/plots/tau_{p_norm}.png", dpi=1200)
     # fig.savefig(my_path + f"/plots/tau_{p_norm}.svg")
     # fig.savefig(my_path + f"/plots/tau_{p_norm}.pdf")
+    return fig
 
 if __name__ == "__main__":
     import doctest  # import the doctest library
